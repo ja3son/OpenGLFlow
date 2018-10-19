@@ -1,4 +1,4 @@
-package com.ja3son.utils.gl
+package com.ja3son.gllib.util
 
 import android.content.res.Resources
 import android.opengl.GLES32
