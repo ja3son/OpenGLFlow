@@ -1,10 +1,16 @@
 package com.ja3son.gllib.util
 
+import android.content.Context
 import android.content.res.Resources
 import android.opengl.GLES32
 import com.ja3son.utils.log.LogUtils
 
 object ShaderUtils {
+    private lateinit var res: Resources
+
+    fun register(context: Context) {
+        this.res = context.resources
+    }
 
     fun loadShader(shaderType: Int, source: String): Int {
 
@@ -29,7 +35,7 @@ object ShaderUtils {
     fun createProgram(vertex: String, fragment: String): Int {
         var program = 0
         val vertexShader = loadShader(GLES32.GL_VERTEX_SHADER, vertex)
-        val fragmentShader = loadShader(GLES32.GL_FRAGMENT_SHADER, vertex)
+        val fragmentShader = loadShader(GLES32.GL_FRAGMENT_SHADER, fragment)
         if (vertexShader != 0 && fragmentShader != 0) {
             program = GLES32.glCreateProgram()
             if (program != 0) {
@@ -51,7 +57,7 @@ object ShaderUtils {
         return program
     }
 
-    fun loadFromAssetsFile(fName: String, res: Resources) =
+    fun loadFromAssetsFile(fName: String) =
             res.assets.open(fName).bufferedReader().use {
                 it.readText()
             }
