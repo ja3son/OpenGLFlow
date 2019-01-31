@@ -5,7 +5,33 @@ import android.opengl.Matrix
 object MatrixState {
     private val projMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
-    private lateinit var mvpMatrix: FloatArray
+    private var mvpMatrix = FloatArray(16)
+    private val stack = Array(10) { FloatArray(16) }
+    private lateinit var currentMatrix: FloatArray
+    private var stackTop: Int = -1
+
+    fun setInitStack() {
+        currentMatrix = FloatArray(16)
+        Matrix.setRotateM(currentMatrix, 0, 0f, 1f, 0f, 0f)
+    }
+
+    fun pushMatrix() {
+        stackTop++
+        for (i in 0 until 16) {
+            stack[stackTop][i] = currentMatrix[i]
+        }
+    }
+
+    fun popMatrix() {
+        for (i in 0 until 16) {
+            currentMatrix[i] = stack[stackTop][i]
+        }
+        stackTop--
+    }
+
+    fun translate(x: Float, y: Float, z: Float) {
+        Matrix.translateM(currentMatrix, 0, x, y, z)
+    }
 
     fun setCamera(
             cx: Float,
@@ -56,6 +82,12 @@ object MatrixState {
     fun getFinalMatrix(spec: FloatArray): FloatArray {
         mvpMatrix = FloatArray(16)
         Matrix.multiplyMM(mvpMatrix, 0, viewMatrix, 0, spec, 0)
+        Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, mvpMatrix, 0)
+        return mvpMatrix
+    }
+
+    fun getFinalMatrix(): FloatArray {
+        Matrix.multiplyMM(mvpMatrix, 0, viewMatrix, 0, currentMatrix, 0)
         Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, mvpMatrix, 0)
         return mvpMatrix
     }

@@ -9,15 +9,18 @@ import javax.microedition.khronos.opengles.GL10
 
 open class BaseRenderer : GLSurfaceView.Renderer {
     lateinit var entities: MutableList<BaseEntity>
+    var ratio: Float = 0.0f
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
+        GLES32.glClearColor(0.5f, 0.5f, 0.5f, 1.0f)
         GLES32.glEnable(GLES32.GL_DEPTH_TEST)
+        GLES32.glEnable(GLES32.GL_CULL_FACE)
         entities = arrayListOf()
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         GLES32.glViewport(0, 0, width, height)
-        val ratio: Float = width / height.toFloat()
+        ratio = width / height.toFloat()
         MatrixState.setProjectFrustum(-ratio * 0.4f, ratio * 0.4f, -1 * 0.4f, 1 * 0.4f, 1f, 50f)
 
         MatrixState.setCamera(
@@ -32,6 +35,5 @@ open class BaseRenderer : GLSurfaceView.Renderer {
         for (entity in entities) {
             entity.drawSelf()
         }
-        GLES32.glEnable(GLES32.GL_DEPTH_TEST)
     }
 }
