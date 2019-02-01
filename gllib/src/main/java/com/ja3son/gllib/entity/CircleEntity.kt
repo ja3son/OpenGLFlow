@@ -60,8 +60,8 @@ class CircleEntity : BaseEntity() {
 
     override fun initShader() {
         program = ShaderUtils.createProgram(
-                ShaderUtils.loadFromAssetsFile("point_size_vertex.glsl"),
-                ShaderUtils.loadFromAssetsFile("point_size_fragment.glsl")
+                ShaderUtils.loadFromAssetsFile("triangle_vertex.glsl"),
+                ShaderUtils.loadFromAssetsFile("triangle_fragment.glsl")
         )
     }
 
