@@ -8,7 +8,6 @@ import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
 class CubeEntity : BaseEntity() {
-    val UNIT_SIZE: Float = 1f
 
     init {
         init()

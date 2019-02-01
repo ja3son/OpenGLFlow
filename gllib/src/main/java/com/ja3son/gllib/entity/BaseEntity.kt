@@ -5,6 +5,7 @@ import java.nio.FloatBuffer
 
 abstract class BaseEntity {
     protected val FLOAT_SIZE: Int = 4
+    protected val UNIT_SIZE: Float = 1f
 
     protected var program: Int = 0
     protected var aPosition: Int = 0
@@ -16,6 +17,7 @@ abstract class BaseEntity {
     protected var counts: Int = 0
     var yAngle = 0f
     var xAngle = 0f
+    var touchIndex = 0
 
     protected lateinit var verticesBuffer: FloatBuffer
     protected lateinit var colorsBuffer: FloatBuffer

@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
-import com.ja3son.gllib.controller.CubeRenderer
+import com.ja3son.gllib.controller.PointsOrLinesRenderer
 
 
 class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
@@ -17,7 +17,7 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
 
     init {
         setEGLContextClientVersion(3)
-        renderer = CubeRenderer()
+        renderer = PointsOrLinesRenderer()
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY
     }
@@ -32,6 +32,11 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
                 for (entity in renderer.entities) {
                     entity.yAngle += dx * TOUCH_SCALE_FACTOR
                     entity.xAngle += dy * TOUCH_SCALE_FACTOR
+                }
+            }
+            MotionEvent.ACTION_DOWN -> {
+                for (entity in renderer.entities) {
+                    entity.touchIndex++
                 }
             }
         }

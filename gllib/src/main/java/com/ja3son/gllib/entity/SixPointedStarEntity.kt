@@ -8,7 +8,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
-class SixPointedStar() : BaseEntity() {
+class SixPointedStarEntity() : BaseEntity() {
 
     private var R: Float = 0f
     private var r: Float = 0f
