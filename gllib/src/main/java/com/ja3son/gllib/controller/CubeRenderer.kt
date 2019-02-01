@@ -33,6 +33,8 @@ class CubeRenderer : BaseRenderer() {
 
         MatrixState.pushMatrix()
         MatrixState.translate(3.5f, 0f, 0f)
+        MatrixState.rotate(30f, 0f, 0f, 1f)
+        MatrixState.scale(0.4f, 2f, 0.6f)
         for (entity in entities) {
             entity.drawSelf()
         }

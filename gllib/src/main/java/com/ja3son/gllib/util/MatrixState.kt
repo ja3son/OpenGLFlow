@@ -33,6 +33,14 @@ object MatrixState {
         Matrix.translateM(currentMatrix, 0, x, y, z)
     }
 
+    fun rotate(angle: Float, x: Float, y: Float, z: Float) {
+        Matrix.rotateM(currentMatrix, 0, angle, x, y, z)
+    }
+
+    fun scale(x: Float, y: Float, z: Float) {
+        Matrix.scaleM(currentMatrix, 0, x, y, z)
+    }
+
     fun setCamera(
             cx: Float,
             cy: Float,
