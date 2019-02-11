@@ -7,31 +7,63 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
-class BeltEntity : BaseEntity() {
+class MultBeltEntity : BaseEntity() {
 
     init {
         init()
     }
 
     override fun initVertexData() {
-        val n = 6
-        counts = 2 * (n + 1)
-        val angdegBegin = -90f
-        val angdegEnd = 90f
-        val angdegSpan = (angdegEnd - angdegBegin) / n
+        val n1 = 3
+        val n2 = 5
+        counts = 2 * (n1 + n2 + 2) + 2
+        val angdegBegin1 = 0f
+        val angdegEnd1 = 90f
+        val angdegSpan1 = (angdegEnd1 - angdegBegin1) / n1
 
+        val angdegBegin2 = 180f
+        val angdegEnd2 = 270f
+        val angdegSpan2 = (angdegEnd2 - angdegBegin2) / n2
         val vertices = FloatArray(counts * 3)
+
+
         var tempCount = 0
-        var angdeg = angdegBegin
-        while (angdeg <= angdegEnd) {
+        var angdeg = angdegBegin1
+        while (angdeg <= angdegEnd1) {
             val angrad = Math.toRadians(angdeg.toDouble())
+
             vertices[tempCount++] = (-0.6f * UNIT_SIZE * Math.sin(angrad)).toFloat()
             vertices[tempCount++] = (0.6f * UNIT_SIZE * Math.cos(angrad)).toFloat()
             vertices[tempCount++] = 0f
+
             vertices[tempCount++] = (-UNIT_SIZE * Math.sin(angrad)).toFloat()
             vertices[tempCount++] = (UNIT_SIZE * Math.cos(angrad)).toFloat()
             vertices[tempCount++] = 0f
-            angdeg += angdegSpan
+            angdeg += angdegSpan1
+        }
+
+        vertices[tempCount++] = vertices[tempCount - 4]
+        vertices[tempCount++] = vertices[tempCount - 4]
+        vertices[tempCount++] = 0f
+
+        angdeg = angdegBegin2
+        while (angdeg <= angdegEnd2) {
+            val angrad = Math.toRadians(angdeg.toDouble())
+
+            if (angdeg == angdegBegin2) {
+                vertices[tempCount++] = (-0.6f * UNIT_SIZE * Math.sin(angrad)).toFloat()
+                vertices[tempCount++] = (0.6f * UNIT_SIZE * Math.cos(angrad)).toFloat()
+                vertices[tempCount++] = 0f
+            }
+
+            vertices[tempCount++] = (-0.6f * UNIT_SIZE * Math.sin(angrad)).toFloat()
+            vertices[tempCount++] = (0.6f * UNIT_SIZE * Math.cos(angrad)).toFloat()
+            vertices[tempCount++] = 0f
+
+            vertices[tempCount++] = (-UNIT_SIZE * Math.sin(angrad)).toFloat()
+            vertices[tempCount++] = (UNIT_SIZE * Math.cos(angrad)).toFloat()
+            vertices[tempCount++] = 0f
+            angdeg += angdegSpan2
         }
 
         tempCount = 0

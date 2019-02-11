@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
-import com.ja3son.gllib.controller.BletCircleRenderer
+import com.ja3son.gllib.controller.MultBletRenderer
 
 
 class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
@@ -17,7 +17,7 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
 
     init {
         setEGLContextClientVersion(3)
-        renderer = BletCircleRenderer()
+        renderer = MultBletRenderer()
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY
     }
