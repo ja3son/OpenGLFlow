@@ -50,16 +50,16 @@ class SixPointedStarEntity() : BaseEntity() {
             angle += tempAngle
         }
 
-        counts = first.size / 3
+        vCounts = first.size / 3
         val vertexArray = FloatArray(first.size)
-        for (i in 0 until counts) {
+        for (i in 0 until vCounts) {
             vertexArray[i * 3] = first[i * 3]
             vertexArray[i * 3 + 1] = first[i * 3 + 1]
             vertexArray[i * 3 + 2] = first[i * 3 + 2]
         }
 
-        val colorArray = FloatArray(counts * 4)
-        for (i in 0 until counts) {
+        val colorArray = FloatArray(vCounts * 4)
+        for (i in 0 until vCounts) {
             if (i % 3 == 0) {
                 colorArray[i * 4] = 1f
                 colorArray[i * 4 + 1] = 1f
@@ -107,6 +107,6 @@ class SixPointedStarEntity() : BaseEntity() {
         GLES32.glVertexAttribPointer(aColor, colorLen, GLES32.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
         GLES32.glEnableVertexAttribArray(aPosition)
         GLES32.glEnableVertexAttribArray(aColor)
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, counts)
+        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
     }
 }
