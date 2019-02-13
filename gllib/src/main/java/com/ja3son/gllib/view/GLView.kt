@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
-import com.ja3son.gllib.controller.MultBletRenderer
+import com.ja3son.gllib.controller.CircleRangeElementRenderer
 
 
 class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
@@ -17,7 +17,7 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
 
     init {
         setEGLContextClientVersion(3)
-        renderer = MultBletRenderer()
+        renderer = CircleRangeElementRenderer()
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY
     }

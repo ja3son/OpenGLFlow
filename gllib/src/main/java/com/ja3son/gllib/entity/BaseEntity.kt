@@ -1,6 +1,7 @@
 package com.ja3son.gllib.entity
 
 import android.opengl.Matrix
+import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 
 abstract class BaseEntity {
@@ -14,12 +15,14 @@ abstract class BaseEntity {
     protected var modelMatrix: FloatArray = FloatArray(16)
     protected val posLen: Int = 3
     protected val colorLen: Int = 4
-    protected var counts: Int = 0
+    protected var vCounts: Int = 0
+    protected var iCounts: Int = 0
     var yAngle = 0f
     var xAngle = 0f
     var touchIndex = 0
 
     protected lateinit var verticesBuffer: FloatBuffer
+    protected lateinit var indicesBuffer: ByteBuffer
     protected lateinit var colorsBuffer: FloatBuffer
 
     fun init() {

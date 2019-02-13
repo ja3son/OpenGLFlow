@@ -1,46 +1,62 @@
 package com.ja3son.gllib.entity
 
 import android.opengl.GLES32
-import android.opengl.Matrix
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
-import org.jetbrains.anko.doAsync
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
-class TriangleEntity : BaseEntity() {
-    private var rotate: Float = 0.0f
+class CircleElementEntity : BaseEntity() {
 
     init {
-        doAsync {
-            while (true) {
-                Thread.sleep(20)
-                rotate += 0.375f
-                Matrix.setIdentityM(modelMatrix, 0)
-                Matrix.rotateM(modelMatrix, 0, rotate, 1.0f, 0.0f, 0.0f)
-            }
-        }
         init()
     }
 
     override fun initVertexData() {
-        vCounts = 3
-        val vertices: FloatArray = floatArrayOf(
-                -4.0f, 0.0f, 0.0f,
-                0.0f, -4.0f, 0.0f,
-                4.0f, 0.0f, 0.0f
-        )
+        val n = 8
+        vCounts = n + 2
 
-        val colors: FloatArray = floatArrayOf(
-                1.0f, 1.0f, 1.0f, 0.0f,
-                0.0f, 0.0f, 1.0f, 0.0f,
-                0.0f, 1.0f, 0.0f, 0.0f
-        )
+        val angdegSpan = 360.0f / n
+        val vertices = FloatArray(vCounts * 3)
+        var tempCount = 0
+        vertices[tempCount++] = 0f
+        vertices[tempCount++] = 0f
+        vertices[tempCount++] = 0f
+        var angdeg = 0f
+        while (Math.ceil(angdeg.toDouble()) <= 360) {
+            val angrad = Math.toRadians(angdeg.toDouble())
+            vertices[tempCount++] = (-UNIT_SIZE * Math.sin(angrad)).toFloat()
+            vertices[tempCount++] = (UNIT_SIZE * Math.cos(angrad)).toFloat()
+            vertices[tempCount++] = 0f
+            angdeg += angdegSpan
+        }
+
+        val indices = byteArrayOf(0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 7, 0, 7, 8, 0, 8, 1)
+        iCounts = indices.size
+
+        tempCount = 0
+        val colors = FloatArray(vCounts * 4)
+        colors[tempCount++] = 1f
+        colors[tempCount++] = 1f
+        colors[tempCount++] = 1f
+        colors[tempCount++] = 0f
+        var i = 4
+        while (i < colors.size) {
+            colors[tempCount++] = 0f
+            colors[tempCount++] = 1f
+            colors[tempCount++] = 0f
+            colors[tempCount++] = 0f
+            i += 4
+        }
 
         verticesBuffer = ByteBuffer.allocateDirect(vertices.size * FLOAT_SIZE)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer()
                 .put(vertices).position(0) as FloatBuffer
+
+        indicesBuffer = ByteBuffer.allocateDirect(indices.size)
+                .order(ByteOrder.nativeOrder())
+                .put(indices).position(0) as ByteBuffer
 
         colorsBuffer = ByteBuffer.allocateDirect(colors.size * FLOAT_SIZE)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer()
@@ -62,11 +78,11 @@ class TriangleEntity : BaseEntity() {
 
     override fun drawSelf() {
         GLES32.glUseProgram(program)
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(modelMatrix), 0)
+        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
         GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
         GLES32.glVertexAttribPointer(aColor, colorLen, GLES32.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
         GLES32.glEnableVertexAttribArray(aPosition)
         GLES32.glEnableVertexAttribArray(aColor)
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
+        GLES32.glDrawElements(GLES32.GL_TRIANGLES, iCounts, GLES32.GL_UNSIGNED_BYTE, indicesBuffer)
     }
 }

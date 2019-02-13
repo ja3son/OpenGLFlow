@@ -15,7 +15,7 @@ class PointsOrLinesEntity : BaseEntity() {
     }
 
     override fun initVertexData() {
-        counts = 5
+        vCounts = 5
         val vertices: FloatArray = floatArrayOf(
                 0f, 0f, 0f, UNIT_SIZE, UNIT_SIZE, 0f,
                 -UNIT_SIZE, UNIT_SIZE, 0f,
@@ -64,16 +64,16 @@ class PointsOrLinesEntity : BaseEntity() {
         Constants.curDrawState = Constants.DrawState.values()[touchIndex % Constants.DrawState.values().size]
         when (Constants.curDrawState) {
             Constants.DrawState.GL_POINTS -> {
-                GLES32.glDrawArrays(GLES32.GL_POINTS, 0, counts)
+                GLES32.glDrawArrays(GLES32.GL_POINTS, 0, vCounts)
             }
             Constants.DrawState.GL_LINES -> {
-                GLES32.glDrawArrays(GLES32.GL_LINES, 0, counts)
+                GLES32.glDrawArrays(GLES32.GL_LINES, 0, vCounts)
             }
             Constants.DrawState.GL_LINE_STRIP -> {
-                GLES32.glDrawArrays(GLES32.GL_LINE_STRIP, 0, counts)
+                GLES32.glDrawArrays(GLES32.GL_LINE_STRIP, 0, vCounts)
             }
             Constants.DrawState.GL_LINE_LOOP -> {
-                GLES32.glDrawArrays(GLES32.GL_LINE_LOOP, 0, counts)
+                GLES32.glDrawArrays(GLES32.GL_LINE_LOOP, 0, vCounts)
             }
         }
     }

@@ -15,12 +15,12 @@ class BeltEntity : BaseEntity() {
 
     override fun initVertexData() {
         val n = 6
-        counts = 2 * (n + 1)
+        vCounts = 2 * (n + 1)
         val angdegBegin = -90f
         val angdegEnd = 90f
         val angdegSpan = (angdegEnd - angdegBegin) / n
 
-        val vertices = FloatArray(counts * 3)
+        val vertices = FloatArray(vCounts * 3)
         var tempCount = 0
         var angdeg = angdegBegin
         while (angdeg <= angdegEnd) {
@@ -36,7 +36,7 @@ class BeltEntity : BaseEntity() {
 
         tempCount = 0
 
-        val colors = FloatArray(counts * 4)
+        val colors = FloatArray(vCounts * 4)
         var i = 0
         while (i < colors.size) {
             colors[tempCount++] = 1f
@@ -80,6 +80,6 @@ class BeltEntity : BaseEntity() {
         GLES32.glVertexAttribPointer(aColor, colorLen, GLES32.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
         GLES32.glEnableVertexAttribArray(aPosition)
         GLES32.glEnableVertexAttribArray(aColor)
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLE_STRIP, 0, counts)
+        GLES32.glDrawArrays(GLES32.GL_TRIANGLE_STRIP, 0, vCounts)
     }
 }

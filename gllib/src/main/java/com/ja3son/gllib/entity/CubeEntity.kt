@@ -14,7 +14,7 @@ class CubeEntity : BaseEntity() {
     }
 
     override fun initVertexData() {
-        counts = 12 * 6
+        vCounts = 12 * 6
         val vertices: FloatArray = floatArrayOf(
                 0f, 0f, UNIT_SIZE,
                 UNIT_SIZE, UNIT_SIZE, UNIT_SIZE,
@@ -204,6 +204,6 @@ class CubeEntity : BaseEntity() {
         GLES32.glVertexAttribPointer(aColor, colorLen, GLES32.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
         GLES32.glEnableVertexAttribArray(aPosition)
         GLES32.glEnableVertexAttribArray(aColor)
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, counts)
+        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
     }
 }
