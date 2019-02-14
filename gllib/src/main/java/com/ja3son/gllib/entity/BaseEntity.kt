@@ -1,6 +1,8 @@
 package com.ja3son.gllib.entity
 
+import android.opengl.GLES32
 import android.opengl.Matrix
+import com.ja3son.gllib.util.ShaderUtils
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 
@@ -37,11 +39,28 @@ abstract class BaseEntity {
         Matrix.setIdentityM(modelMatrix, 0)
     }
 
-    abstract fun initVertexData()
+    open fun initVertexData() {
 
-    abstract fun initShader()
+    }
 
-    abstract fun initShaderParams()
+    open fun initShader() {
+        program = ShaderUtils.createProgram(
+                ShaderUtils.loadFromAssetsFile("triangle_vertex.glsl"),
+                ShaderUtils.loadFromAssetsFile("triangle_fragment.glsl")
+        )
+    }
 
-    abstract fun drawSelf()
+    open fun initShaderParams() {
+        aPosition = GLES32.glGetAttribLocation(program, "aPosition")
+        aColor = GLES32.glGetAttribLocation(program, "aColor")
+        uMVPMatrix = GLES32.glGetUniformLocation(program, "uMVPMatrix")
+    }
+
+    open fun drawSelf() {
+        GLES32.glUseProgram(program)
+        GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
+        GLES32.glVertexAttribPointer(aColor, colorLen, GLES32.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
+        GLES32.glEnableVertexAttribArray(aPosition)
+        GLES32.glEnableVertexAttribArray(aColor)
+    }
 }

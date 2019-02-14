@@ -99,4 +99,8 @@ object MatrixState {
         Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, mvpMatrix, 0)
         return mvpMatrix
     }
+
+    fun getModelMatrix(): FloatArray {
+        return currentMatrix
+    }
 }

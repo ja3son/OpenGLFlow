@@ -10,6 +10,9 @@ import javax.microedition.khronos.opengles.GL10
 open class BaseRenderer : GLSurfaceView.Renderer {
     lateinit var entities: MutableList<BaseEntity>
     var ratio: Float = 0.0f
+    var yAngle = 0f
+    var xAngle = 0f
+    var touchIndex = 0
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES32.glClearColor(0.5f, 0.5f, 0.5f, 1.0f)

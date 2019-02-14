@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
-import com.ja3son.gllib.controller.SixPointerStartAttribRenderer
+import com.ja3son.gllib.controller.ColorCubeRenderer
 
 
 class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
@@ -17,7 +17,7 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
 
     init {
         setEGLContextClientVersion(3)
-        renderer = SixPointerStartAttribRenderer()
+        renderer = ColorCubeRenderer()
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY
     }
@@ -29,15 +29,11 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
             MotionEvent.ACTION_MOVE -> {
                 val dy = y - mPreviousY
                 val dx = x - mPreviousX
-                for (entity in renderer.entities) {
-                    entity.yAngle += dx * TOUCH_SCALE_FACTOR
-                    entity.xAngle += dy * TOUCH_SCALE_FACTOR
-                }
+                renderer.yAngle += dx * TOUCH_SCALE_FACTOR
+                renderer.xAngle += dy * TOUCH_SCALE_FACTOR
             }
             MotionEvent.ACTION_DOWN -> {
-                for (entity in renderer.entities) {
-                    entity.touchIndex++
-                }
+                renderer.touchIndex++
             }
         }
         mPreviousY = y
