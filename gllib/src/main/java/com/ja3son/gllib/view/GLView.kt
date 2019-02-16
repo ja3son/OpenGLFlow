@@ -4,8 +4,8 @@ import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
-import com.ja3son.gllib.controller.BallRenderer
 import com.ja3son.gllib.controller.BaseRenderer
+import com.ja3son.gllib.controller.MultBallRenderer
 
 
 class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
@@ -17,7 +17,7 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
 
     init {
         setEGLContextClientVersion(3)
-        renderer = BallRenderer()
+        renderer = MultBallRenderer()
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY
     }
