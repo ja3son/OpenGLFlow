@@ -2,6 +2,7 @@ package com.ja3son.gllib.controller
 
 import android.opengl.GLES32
 import com.ja3son.gllib.entity.BallSpecularEntity
+import com.ja3son.gllib.entity.BallSuperEntity
 import com.ja3son.gllib.util.MatrixState
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -11,7 +12,7 @@ class MultBallRenderer : BaseRenderer() {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
-        entities.add(BallSpecularEntity(0.8f))
+        entities.add(BallSuperEntity(0.8f))
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
