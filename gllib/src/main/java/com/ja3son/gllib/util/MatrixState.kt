@@ -15,8 +15,13 @@ object MatrixState {
 
 
     var lightLocation = floatArrayOf(0f, 0f, 0f)
-    var llbbL = ByteBuffer.allocateDirect(3 * 4)
+    var lightPositionFBCache = ByteBuffer.allocateDirect(3 * 4)
     var lightPositionFB: FloatBuffer? = null
+
+
+    var cameraLocation = FloatArray(3)
+    var cameraFBCache = ByteBuffer.allocateDirect(3 * 4)
+    var cameraFB: FloatBuffer? = null
 
     fun setInitStack() {
         currentMatrix = FloatArray(16)
@@ -67,6 +72,16 @@ object MatrixState {
                 tx, ty, tz,
                 upx, upy, upz
         )
+
+        cameraLocation[0] = cx
+        cameraLocation[1] = cy
+        cameraLocation[2] = cz
+
+        cameraFBCache.clear()
+        cameraFBCache.order(ByteOrder.nativeOrder())
+        cameraFB = cameraFBCache.asFloatBuffer()
+        cameraFB?.put(cameraLocation)
+        cameraFB?.position(0)
     }
 
     fun setProjectOrtho(
@@ -113,14 +128,14 @@ object MatrixState {
     }
 
     fun setLightLocation(x: Float, y: Float, z: Float) {
-        llbbL.clear()
+        lightPositionFBCache.clear()
 
         lightLocation[0] = x
         lightLocation[1] = y
         lightLocation[2] = z
 
-        llbbL.order(ByteOrder.nativeOrder())//ÉèÖÃ×Ö½ÚË³Ðò
-        lightPositionFB = llbbL.asFloatBuffer()
+        lightPositionFBCache.order(ByteOrder.nativeOrder())
+        lightPositionFB = lightPositionFBCache.asFloatBuffer()
         lightPositionFB?.put(lightLocation)
         lightPositionFB?.position(0)
     }
