@@ -24,6 +24,7 @@ abstract class BaseEntity {
     var touchIndex = 0
 
     protected lateinit var verticesBuffer: FloatBuffer
+    protected lateinit var normalBuffer: FloatBuffer
     protected lateinit var indicesBuffer: ByteBuffer
     protected lateinit var colorsBuffer: FloatBuffer
 

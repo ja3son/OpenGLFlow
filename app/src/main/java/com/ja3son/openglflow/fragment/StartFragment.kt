@@ -7,11 +7,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import com.ja3son.openglflow.R
 import com.ja3son.openglflow.viewmodel.StartViewModel
 import kotlinx.android.synthetic.main.start_fragment.*
 
-class StartFragment : Fragment() {
+class StartFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
 
     companion object {
         fun newInstance() = StartFragment()
@@ -28,6 +29,7 @@ class StartFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(StartViewModel::class.java)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        seek_bar.setOnSeekBarChangeListener(this)
     }
 
     override fun onResume() {
@@ -38,6 +40,16 @@ class StartFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         gl_view.onPause()
+    }
+
+    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+        gl_view.setLightOffset((seekBar!!.max / 2.0f - progress) / (seekBar.max / 2.0f) * -4f)
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar?) {
     }
 
 }

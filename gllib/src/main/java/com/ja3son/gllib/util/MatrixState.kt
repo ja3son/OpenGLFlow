@@ -1,6 +1,9 @@
 package com.ja3son.gllib.util
 
 import android.opengl.Matrix
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.FloatBuffer
 
 object MatrixState {
     private val projMatrix = FloatArray(16)
@@ -9,6 +12,11 @@ object MatrixState {
     private val stack = Array(10) { FloatArray(16) }
     private lateinit var currentMatrix: FloatArray
     private var stackTop: Int = -1
+
+
+    var lightLocation = floatArrayOf(0f, 0f, 0f)
+    var llbbL = ByteBuffer.allocateDirect(3 * 4)
+    var lightPositionFB: FloatBuffer? = null
 
     fun setInitStack() {
         currentMatrix = FloatArray(16)
@@ -102,5 +110,18 @@ object MatrixState {
 
     fun getModelMatrix(): FloatArray {
         return currentMatrix
+    }
+
+    fun setLightLocation(x: Float, y: Float, z: Float) {
+        llbbL.clear()
+
+        lightLocation[0] = x
+        lightLocation[1] = y
+        lightLocation[2] = z
+
+        llbbL.order(ByteOrder.nativeOrder())//ÉèÖÃ×Ö½ÚË³Ðò
+        lightPositionFB = llbbL.asFloatBuffer()
+        lightPositionFB?.put(lightLocation)
+        lightPositionFB?.position(0)
     }
 }
