@@ -23,6 +23,11 @@ object MatrixState {
     var cameraFBCache = ByteBuffer.allocateDirect(3 * 4)
     var cameraFB: FloatBuffer? = null
 
+
+    var lightDirection = FloatArray(3)
+    var lightDirectionFBCache = ByteBuffer.allocateDirect(3 * 4)
+    var lightDirectionFB: FloatBuffer? = null
+
     fun setInitStack() {
         currentMatrix = FloatArray(16)
         Matrix.setRotateM(currentMatrix, 0, 0f, 1f, 0f, 0f)
@@ -138,5 +143,18 @@ object MatrixState {
         lightPositionFB = lightPositionFBCache.asFloatBuffer()
         lightPositionFB?.put(lightLocation)
         lightPositionFB?.position(0)
+    }
+
+    fun setLightDirection(x: Float, y: Float, z: Float) {
+        lightDirectionFBCache.clear()
+
+        lightDirection[0] = x
+        lightDirection[1] = y
+        lightDirection[2] = z
+
+        lightDirectionFBCache.order(ByteOrder.nativeOrder())
+        lightDirectionFB = lightDirectionFBCache.asFloatBuffer()
+        lightDirectionFB?.put(lightDirection)
+        lightDirectionFB?.position(0)
     }
 }

@@ -3,7 +3,6 @@ package com.ja3son.gllib.view
 import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
 import com.ja3son.gllib.controller.MultBallRenderer
@@ -45,6 +44,6 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
     }
 
     fun setLightOffset(lightOffset: Float) {
-        MatrixState.setLightLocation(lightOffset, 0f, 1.5f)
+        MatrixState.setLightDirection(lightOffset, 0f, 1.5f)
     }
 }
