@@ -11,8 +11,6 @@ import java.nio.FloatBuffer
 
 class BallEntity(val r: Float) : BaseEntity() {
 
-    var uRHandler: Int = 0
-
     init {
         init()
     }

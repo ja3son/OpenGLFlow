@@ -44,6 +44,6 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
     }
 
     fun setLightOffset(lightOffset: Float) {
-        MatrixState.setLightDirection(lightOffset, 0f, 1.5f)
+        MatrixState.setLightLocation(lightOffset, 0f, 1.5f)
     }
 }

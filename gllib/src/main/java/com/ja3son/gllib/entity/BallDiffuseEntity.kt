@@ -2,7 +2,6 @@ package com.ja3son.gllib.entity
 
 import android.opengl.GLES30
 import android.opengl.GLES32
-import android.util.Log
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
 import java.nio.ByteBuffer
@@ -11,11 +10,6 @@ import java.nio.FloatBuffer
 
 
 class BallDiffuseEntity(val r: Float) : BaseEntity() {
-
-    var uRHandler: Int = 0
-    var uMMatrix: Int = 0
-    var aNormal: Int = 0
-    var aLightLocation: Int = 0
 
     init {
         init()
@@ -115,7 +109,7 @@ class BallDiffuseEntity(val r: Float) : BaseEntity() {
         uMMatrix = GLES30.glGetUniformLocation(program, "uMMatrix")
         uRHandler = GLES30.glGetUniformLocation(program, "uR")
         aNormal = GLES30.glGetAttribLocation(program, "aNormal")
-        aLightLocation = GLES30.glGetUniformLocation(program, "uLightLocation")
+        uLightLocation = GLES30.glGetUniformLocation(program, "uLightLocation")
     }
 
     override fun drawSelf() {
@@ -127,7 +121,7 @@ class BallDiffuseEntity(val r: Float) : BaseEntity() {
         GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
 
         GLES32.glUniform1f(uRHandler, r * UNIT_SIZE)
-        GLES30.glUniform3fv(aLightLocation, 1, MatrixState.lightPositionFB)
+        GLES30.glUniform3fv(uLightLocation, 1, MatrixState.lightPositionFB)
 
         GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
         GLES30.glVertexAttribPointer(aNormal, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, normalBuffer)

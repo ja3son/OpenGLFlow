@@ -14,6 +14,15 @@ abstract class BaseEntity {
     protected var aPosition: Int = 0
     protected var aColor: Int = 0
     protected var uMVPMatrix: Int = 0
+
+    protected var uRHandler: Int = 0
+    protected var uMMatrix: Int = 0
+    protected var aNormal: Int = 0
+    protected var uLightDirection: Int = 0
+    protected var uLightLocation: Int = 0
+    protected var uCamera: Int = 0
+
+
     protected var modelMatrix: FloatArray = FloatArray(16)
     protected val posLen: Int = 3
     protected val colorLen: Int = 4

@@ -9,8 +9,6 @@ import java.nio.FloatBuffer
 
 class ColorRectEntity : BaseEntity() {
 
-    var uMMatrix: Int = 0
-
     init {
         init()
     }

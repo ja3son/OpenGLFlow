@@ -11,12 +11,6 @@ import java.nio.FloatBuffer
 
 class BallDirectionEntity(val r: Float) : BaseEntity() {
 
-    var uRHandler: Int = 0
-    var uMMatrix: Int = 0
-    var aNormal: Int = 0
-    var uLightDirection: Int = 0
-    var uCamera: Int = 0
-
     init {
         init()
     }
