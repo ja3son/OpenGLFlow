@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
-import com.ja3son.gllib.controller.MultBallRenderer
+import com.ja3son.gllib.controller.TriangleTexRenderer
 import com.ja3son.gllib.util.MatrixState
 
 
@@ -18,7 +18,7 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
 
     init {
         setEGLContextClientVersion(3)
-        renderer = MultBallRenderer()
+        renderer = TriangleTexRenderer()
         setLightOffset(-4f)
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY

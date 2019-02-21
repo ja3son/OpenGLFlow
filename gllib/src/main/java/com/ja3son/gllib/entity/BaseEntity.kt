@@ -12,6 +12,7 @@ abstract class BaseEntity {
 
     protected var program: Int = 0
     protected var aPosition: Int = 0
+    protected var aTexCoor: Int = 0
     protected var aColor: Int = 0
     protected var uMVPMatrix: Int = 0
 
@@ -33,6 +34,7 @@ abstract class BaseEntity {
     var touchIndex = 0
 
     protected lateinit var verticesBuffer: FloatBuffer
+    protected lateinit var texCoorBuffer: FloatBuffer
     protected lateinit var normalBuffer: FloatBuffer
     protected lateinit var indicesBuffer: ByteBuffer
     protected lateinit var colorsBuffer: FloatBuffer
