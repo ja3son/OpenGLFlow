@@ -26,6 +26,7 @@ abstract class BaseEntity {
 
     protected var modelMatrix: FloatArray = FloatArray(16)
     protected val posLen: Int = 3
+    protected val texLen: Int = 2
     protected val colorLen: Int = 4
     protected var vCounts: Int = 0
     protected var iCounts: Int = 0

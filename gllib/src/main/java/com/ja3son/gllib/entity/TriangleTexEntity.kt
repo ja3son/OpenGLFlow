@@ -59,7 +59,7 @@ class TriangleTexEntity(val textureId: Int) : BaseEntity() {
         MatrixState.rotate(xAngle, 1f, 0f, 0f)
         GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
         GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
-        GLES32.glVertexAttribPointer(aTexCoor, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, texCoorBuffer)
+        GLES32.glVertexAttribPointer(aTexCoor, texLen, GLES32.GL_FLOAT, false, texLen * FLOAT_SIZE, texCoorBuffer)
         GLES32.glEnableVertexAttribArray(aPosition)
         GLES32.glEnableVertexAttribArray(aTexCoor)
         GLES32.glActiveTexture(GLES32.GL_TEXTURE0)
