@@ -3,10 +3,10 @@ uniform mat4 uMVPMatrix;
 uniform mat4 uMMatrix;
 uniform vec3 uCamera;
 uniform vec3 uLightLocationSun;
-in vec3 aPosition;
-in vec2 aTexCoor;
-in vec3 aNormal;
-out vec2 vTextureCoord;
+in vec3 aPosition;  
+in vec2 aTexCoor;    
+in vec3 aNormal;    
+out vec2 vTextureCoord;  
 out vec4 vAmbient;
 out vec4 vDiffuse;
 out vec4 vSpecular;
@@ -47,7 +47,7 @@ void main() {
    vec4 diffuseTemp=vec4(0.0,0.0,0.0,0.0);
    vec4 specularTemp=vec4(0.0,0.0,0.0,0.0);
 
-   pointLight(normalize(aNormal),ambientTemp,diffuseTemp,specularTemp,uLightLocationSun,vec4(0.05,0.05,0.05,1.0),vec4(1.0,1.0,1.0,1.0),vec4(0.3,0.3,0.3,1.0));
+   pointLight(normalize(aNormal),ambientTemp,diffuseTemp,specularTemp,uLightLocationSun,vec4(0.05,0.05,0.025,1.0),vec4(1.0,1.0,0.5,1.0),vec4(0.3,0.3,0.15,1.0));
 
    vAmbient=ambientTemp;
    vDiffuse=diffuseTemp;
