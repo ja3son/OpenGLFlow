@@ -13,7 +13,7 @@ class TriangleTexRenderer : BaseRenderer() {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
-        entities.add(TriangleTexEntity(ShaderUtils.initTexture(R.drawable.wall)))
+        entities.add(TriangleTexEntity(ShaderUtils.initTextureEtc1(R.raw.wall)))
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

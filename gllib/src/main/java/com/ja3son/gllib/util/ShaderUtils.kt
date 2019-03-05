@@ -3,9 +3,12 @@ package com.ja3son.gllib.util
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.BitmapFactory
+import android.opengl.ETC1Util
 import android.opengl.GLES32
 import android.opengl.GLUtils
 import com.ja3son.utils.log.LogUtils
+import java.io.InputStream
+
 
 object ShaderUtils {
     private lateinit var res: Resources
@@ -89,6 +92,32 @@ object ShaderUtils {
         GLUtils.texImage2D(GLES32.GL_TEXTURE_2D, 0, bitmap, 0)
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, 0)
         bitmap.recycle()
+        return textureId
+    }
+
+    fun initTextureEtc1(raw: Int): Int {
+        val textures = IntArray(1)
+        GLES32.glGenTextures(1, textures, 0)
+        val textureId = textures[0]
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureId)
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_NEAREST)
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_LINEAR)
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_WRAP_S, GLES32.GL_REPEAT)
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_WRAP_T, GLES32.GL_REPEAT)
+
+        val inputStream: InputStream = res.openRawResource(raw)
+
+        ETC1Util.loadTexture(
+                GLES32.GL_TEXTURE_2D,
+                0,
+                0,
+                GLES32.GL_RGB,
+                GLES32.GL_UNSIGNED_BYTE,
+                inputStream
+        )
+
+        inputStream.close()
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, 0)
         return textureId
     }
 }
