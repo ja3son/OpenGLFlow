@@ -2,6 +2,7 @@ package com.ja3son.gllib.util
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.opengl.ETC1Util
 import android.opengl.GLES32
@@ -9,6 +10,7 @@ import android.opengl.GLUtils
 import android.os.Build
 import android.support.annotation.RequiresApi
 import com.ja3son.utils.log.LogUtils
+import java.io.IOException
 import java.io.InputStream
 import java.nio.ByteBuffer
 
@@ -125,45 +127,97 @@ object ShaderUtils {
     }
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    fun init3DTexture(texData: ByteArray, width: Int, height: Int, depth: Int)//加载3D纹理的方法
+    fun init3DTexture(texData: ByteArray, width: Int, height: Int, depth: Int)
             : Int {
-        //生成纹理ID
+
         val textures = IntArray(1)
         GLES32.glGenTextures(
-                1, //产生的纹理id的数量
-                textures, //纹理id的数组
-                0           //偏移量
+                1,
+                textures,
+                0
         )
-        val textureId = textures[0]//获得纹理id
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_3D, textureId)//绑定纹理
-        //设置MIN采样方式
+        val textureId = textures[0]
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_3D, textureId)
+
         GLES32.glTexParameteri(GLES32.GL_TEXTURE_3D, GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_NEAREST)
-        //设置MAG采样方式
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_3D, GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_NEAREST)
-        //S轴为重复拉伸方式
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_3D, GLES32.GL_TEXTURE_WRAP_S, GLES32.GL_REPEAT)
-        //T轴为重复拉伸方式
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_3D, GLES32.GL_TEXTURE_WRAP_T, GLES32.GL_REPEAT)
-        //R轴为重复拉伸方式
-        GLES32.glTexParameteri(GLES32.GL_TEXTURE_3D, GLES32.GL_TEXTURE_WRAP_R, GLES32.GL_REPEAT)
-        //创建纹理数据缓冲
-        val texels = ByteBuffer.allocateDirect(texData.size)
-        texels.put(texData)//向缓冲区放入纹理数据
-        texels.position(0)//设置缓冲区起始位置
 
-        GLES32.glTexImage3D(//实际加载3D纹理的方法
-                GLES32.GL_TEXTURE_3D, //纹理类型
-                0, //纹理层次
-                GLES32.GL_RGBA8, //纹理内部格式
-                width, //纹理的宽度
-                height, //纹理的高度
-                depth, //纹理的深度
-                0, //纹理边框尺寸
-                GLES32.GL_RGBA, //纹理的格式
-                GLES32.GL_UNSIGNED_BYTE, //纹理数据的类型
-                texels//纹理数据的缓冲
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_3D, GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_NEAREST)
+
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_3D, GLES32.GL_TEXTURE_WRAP_S, GLES32.GL_REPEAT)
+
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_3D, GLES32.GL_TEXTURE_WRAP_T, GLES32.GL_REPEAT)
+
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_3D, GLES32.GL_TEXTURE_WRAP_R, GLES32.GL_REPEAT)
+
+        val texels = ByteBuffer.allocateDirect(texData.size)
+        texels.put(texData)
+        texels.position(0)
+
+        GLES32.glTexImage3D(
+                GLES32.GL_TEXTURE_3D,
+                0,
+                GLES32.GL_RGBA8,
+                width,
+                height,
+                depth,
+                0,
+                GLES32.GL_RGBA,
+                GLES32.GL_UNSIGNED_BYTE,
+                texels
         )
 
-        return textureId//返回3D纹理id
+        return textureId
+    }
+
+    fun convertPicsToBuffer(resIds: IntArray, width: Int, height: Int): ByteBuffer {
+        val perPicByteCount = width * height * 4
+        val buf = ByteBuffer.allocateDirect(perPicByteCount * resIds.size)
+
+        for (i in 0 until resIds.size) {
+            val id = resIds[i]
+            val inputStream = res.openRawResource(id)
+            val bitmapTmp: Bitmap
+            try {
+                bitmapTmp = BitmapFactory.decodeStream(inputStream)
+            } finally {
+                try {
+                    inputStream.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+            buf.position(i * perPicByteCount)
+            bitmapTmp.copyPixelsToBuffer(buf)
+            bitmapTmp.recycle()
+        }
+        return buf
+    }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    fun initTextureArray(picId: IntArray, width: Int, height: Int): Int {
+        val textures = IntArray(1)
+        GLES32.glGenTextures(1, textures, 0)
+        val textureId = textures[0]
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D_ARRAY, textureId)
+        GLES32.glTexParameterf(GLES32.GL_TEXTURE_2D_ARRAY, GLES32.GL_TEXTURE_WRAP_S, GLES32.GL_CLAMP_TO_EDGE.toFloat())
+        GLES32.glTexParameterf(GLES32.GL_TEXTURE_2D_ARRAY, GLES32.GL_TEXTURE_WRAP_T, GLES32.GL_CLAMP_TO_EDGE.toFloat())
+        GLES32.glTexParameterf(GLES32.GL_TEXTURE_2D_ARRAY, GLES32.GL_TEXTURE_WRAP_R, GLES32.GL_CLAMP_TO_EDGE.toFloat())
+        GLES32.glTexParameterf(GLES32.GL_TEXTURE_2D_ARRAY, GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_NEAREST.toFloat())
+        GLES32.glTexParameterf(GLES32.GL_TEXTURE_2D_ARRAY, GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_LINEAR.toFloat())
+        val texBuff = convertPicsToBuffer(picId, width, height)
+        texBuff.position(0)
+        GLES32.glTexImage3D(
+                GLES32.GL_TEXTURE_2D_ARRAY,
+                0,
+                GLES32.GL_RGBA8,
+                width,
+                height,
+                picId.size,
+                0,
+                GLES32.GL_RGBA,
+                GLES32.GL_UNSIGNED_BYTE,
+                texBuff
+        )
+        return textureId
     }
 }
