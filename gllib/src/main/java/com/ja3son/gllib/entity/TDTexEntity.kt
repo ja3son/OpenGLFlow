@@ -157,7 +157,7 @@ class TDTexEntity(val textureId: Int) : BaseEntity() {
         GLES32.glEnableVertexAttribArray(aPosition)
         GLES32.glEnableVertexAttribArray(aNormal)
         GLES32.glActiveTexture(GLES32.GL_TEXTURE0)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureId)
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_3D, textureId)
         GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
     }
 }
