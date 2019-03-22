@@ -18,6 +18,7 @@ open class BaseRenderer : GLSurfaceView.Renderer {
         GLES32.glClearColor(0.5f, 0.5f, 0.5f, 1.0f)
         GLES32.glEnable(GLES32.GL_DEPTH_TEST)
         GLES32.glEnable(GLES32.GL_CULL_FACE)
+        MatrixState.setInitStack()
         entities = arrayListOf()
     }
 

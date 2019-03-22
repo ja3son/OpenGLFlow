@@ -9,9 +9,12 @@ import android.opengl.GLES32
 import android.opengl.GLUtils
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.util.Log
 import com.ja3son.utils.log.LogUtils
+import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.nio.ByteBuffer
 
 
@@ -220,4 +223,60 @@ object ShaderUtils {
         )
         return textureId
     }
+
+    fun loadObjVertex(file: String): FloatArray? {
+        var vXYZ: FloatArray? = null
+
+        val alv = ArrayList<Float>()
+        val alvResult = ArrayList<Float>()
+
+        try {
+            val inputStream = res.assets.open(file)
+            val isr = InputStreamReader(inputStream)
+            val br = BufferedReader(isr)
+            var temp: String?
+
+            do {
+                temp = br.readLine()
+                if (temp != null && temp != "") {
+                    val temps = temp.split("[ ]+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    if (temps[0].trim { it <= ' ' } == "v") {
+                        alv.add(temps[1].toFloat())
+                        alv.add(temps[2].toFloat())
+                        alv.add(temps[3].toFloat())
+                    } else if (temps[0].trim { it <= ' ' } == "f") {
+                        var index = Integer.parseInt(temps[1].split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]) - 1
+
+                        alvResult.add(alv[3 * index])
+                        alvResult.add(alv[3 * index + 1])
+                        alvResult.add(alv[3 * index + 2])
+
+                        index = Integer.parseInt(temps[2].split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]) - 1
+
+                        alvResult.add(alv[3 * index])
+                        alvResult.add(alv[3 * index + 1])
+                        alvResult.add(alv[3 * index + 2])
+
+                        index = Integer.parseInt(temps[3].split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]) - 1
+
+                        alvResult.add(alv[3 * index])
+                        alvResult.add(alv[3 * index + 1])
+                        alvResult.add(alv[3 * index + 2])
+                    }
+                }
+            } while (temp != null)
+
+            val size = alvResult.size
+            vXYZ = FloatArray(size)
+            for (i in 0 until size) {
+                vXYZ[i] = alvResult[i]
+            }
+        } catch (e: Exception) {
+            Log.e("ja333son", "load error" + e.message)
+            e.printStackTrace()
+        }
+
+        return vXYZ
+    }
+
 }
