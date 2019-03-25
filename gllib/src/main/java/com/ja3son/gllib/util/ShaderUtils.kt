@@ -9,7 +9,6 @@ import android.opengl.GLES32
 import android.opengl.GLUtils
 import android.os.Build
 import android.support.annotation.RequiresApi
-import android.util.Log
 import com.ja3son.utils.log.LogUtils
 import java.io.BufferedReader
 import java.io.IOException
@@ -224,11 +223,25 @@ object ShaderUtils {
         return textureId
     }
 
-    fun loadObjVertex(file: String): FloatArray? {
-        var vXYZ: FloatArray? = null
+    fun getCrossProduct(x1: Float, y1: Float, z1: Float, x2: Float, y2: Float, z2: Float): FloatArray {
+        val A = y1 * z2 - y2 * z1
+        val B = z1 * x2 - z2 * x1
+        val C = x1 * y2 - x2 * y1
+        return floatArrayOf(A, B, C)
+    }
+
+    fun vectorNormal(vector: FloatArray): FloatArray {
+        val module = Math.sqrt((vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]).toDouble()).toFloat()
+        return floatArrayOf(vector[0] / module, vector[1] / module, vector[2] / module)
+    }
+
+    var vXYZ: FloatArray? = null
+    var nXYZ: FloatArray? = null
+    fun loadObj(file: String) {
 
         val alv = ArrayList<Float>()
         val alvResult = ArrayList<Float>()
+        val alnResult = ArrayList<Float>()
 
         try {
             val inputStream = res.assets.open(file)
@@ -245,38 +258,67 @@ object ShaderUtils {
                         alv.add(temps[2].toFloat())
                         alv.add(temps[3].toFloat())
                     } else if (temps[0].trim { it <= ' ' } == "f") {
-                        var index = Integer.parseInt(temps[1].split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]) - 1
+                        var index = Integer.parseInt(temps[1].split("/")[0]) - 1
+                        val x0 = alv[3 * index]
+                        val y0 = alv[3 * index + 1]
+                        val z0 = alv[3 * index + 2]
+                        alvResult.add(x0)
+                        alvResult.add(y0)
+                        alvResult.add(z0)
 
-                        alvResult.add(alv[3 * index])
-                        alvResult.add(alv[3 * index + 1])
-                        alvResult.add(alv[3 * index + 2])
+                        index = Integer.parseInt(temps[2].split("/")[0]) - 1
+                        val x1 = alv[3 * index]
+                        val y1 = alv[3 * index + 1]
+                        val z1 = alv[3 * index + 2]
+                        alvResult.add(x1)
+                        alvResult.add(y1)
+                        alvResult.add(z1)
 
-                        index = Integer.parseInt(temps[2].split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]) - 1
+                        index = Integer.parseInt(temps[3].split("/")[0]) - 1
+                        val x2 = alv[3 * index]
+                        val y2 = alv[3 * index + 1]
+                        val z2 = alv[3 * index + 2]
+                        alvResult.add(x2)
+                        alvResult.add(y2)
+                        alvResult.add(z2)
 
-                        alvResult.add(alv[3 * index])
-                        alvResult.add(alv[3 * index + 1])
-                        alvResult.add(alv[3 * index + 2])
+                        val vxa = x1 - x0
+                        val vya = y1 - y0
+                        val vza = z1 - z0
 
-                        index = Integer.parseInt(temps[3].split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]) - 1
+                        val vxb = x2 - x0
+                        val vyb = y2 - y0
+                        val vzb = z2 - z0
 
-                        alvResult.add(alv[3 * index])
-                        alvResult.add(alv[3 * index + 1])
-                        alvResult.add(alv[3 * index + 2])
+                        val vNormal = vectorNormal(
+                                getCrossProduct(
+                                        vxa, vya, vza, vxb, vyb, vzb
+                                )
+                        )
+
+                        for (i in 0..2) {
+                            alnResult.add(vNormal[0])
+                            alnResult.add(vNormal[1])
+                            alnResult.add(vNormal[2])
+                        }
                     }
                 }
             } while (temp != null)
 
-            val size = alvResult.size
+            var size = alvResult.size
             vXYZ = FloatArray(size)
             for (i in 0 until size) {
-                vXYZ[i] = alvResult[i]
+                vXYZ!![i] = alvResult[i]
+            }
+
+            size = alnResult.size
+            nXYZ = FloatArray(size)
+            for (i in 0 until size) {
+                nXYZ!![i] = alnResult[i]
             }
         } catch (e: Exception) {
-            Log.e("ja333son", "load error" + e.message)
+            LogUtils.eLog("load error")
             e.printStackTrace()
         }
-
-        return vXYZ
     }
-
 }
