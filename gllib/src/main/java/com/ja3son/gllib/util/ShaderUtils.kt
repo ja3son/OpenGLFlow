@@ -237,11 +237,48 @@ object ShaderUtils {
 
     var vXYZ: FloatArray? = null
     var nXYZ: FloatArray? = null
+
+    class Normal(var nx: Float, var ny: Float, var nz: Float) {
+        override fun equals(other: Any?): Boolean {
+            return if (other is Normal) {
+                val tn = other as Normal?
+                Math.abs(nx - tn!!.nx) < DIFF &&
+                        Math.abs(ny - tn.ny) < DIFF &&
+                        Math.abs(ny - tn.ny) < DIFF
+            } else {
+                false
+            }
+        }
+
+        override fun hashCode(): Int {
+            return 1
+        }
+
+        companion object {
+            const val DIFF = 0.0000001f
+
+            fun getAverage(sn: Set<Normal>): FloatArray {
+
+                val result = FloatArray(3)
+
+                for (n in sn) {
+                    result[0] += n.nx
+                    result[1] += n.ny
+                    result[2] += n.nz
+                }
+
+                return vectorNormal(result)
+            }
+        }
+    }
+
     fun loadObj(file: String) {
 
         val alv = ArrayList<Float>()
         val alvResult = ArrayList<Float>()
-        val alnResult = ArrayList<Float>()
+        val alFaceIndex = ArrayList<Int>()
+        val hmn = HashMap<Int, HashSet<Normal>>()
+
 
         try {
             val inputStream = res.assets.open(file)
@@ -258,29 +295,41 @@ object ShaderUtils {
                         alv.add(temps[2].toFloat())
                         alv.add(temps[3].toFloat())
                     } else if (temps[0].trim { it <= ' ' } == "f") {
-                        var index = Integer.parseInt(temps[1].split("/")[0]) - 1
-                        val x0 = alv[3 * index]
-                        val y0 = alv[3 * index + 1]
-                        val z0 = alv[3 * index + 2]
+                        val index = IntArray(3)
+
+
+                        index[0] = Integer.parseInt(temps[1].split("/")[0]) - 1
+
+                        val x0 = alv[3 * index[0]]
+                        val y0 = alv[3 * index[0] + 1]
+                        val z0 = alv[3 * index[0] + 2]
                         alvResult.add(x0)
                         alvResult.add(y0)
                         alvResult.add(z0)
 
-                        index = Integer.parseInt(temps[2].split("/")[0]) - 1
-                        val x1 = alv[3 * index]
-                        val y1 = alv[3 * index + 1]
-                        val z1 = alv[3 * index + 2]
+
+                        index[1] = Integer.parseInt(temps[2].split("/")[0]) - 1
+                        val x1 = alv[3 * index[1]]
+                        val y1 = alv[3 * index[1] + 1]
+                        val z1 = alv[3 * index[1] + 2]
                         alvResult.add(x1)
                         alvResult.add(y1)
                         alvResult.add(z1)
 
-                        index = Integer.parseInt(temps[3].split("/")[0]) - 1
-                        val x2 = alv[3 * index]
-                        val y2 = alv[3 * index + 1]
-                        val z2 = alv[3 * index + 2]
+
+                        index[2] = Integer.parseInt(temps[3].split("/")[0]) - 1
+                        val x2 = alv[3 * index[2]]
+                        val y2 = alv[3 * index[2] + 1]
+                        val z2 = alv[3 * index[2] + 2]
                         alvResult.add(x2)
                         alvResult.add(y2)
                         alvResult.add(z2)
+
+
+                        alFaceIndex.add(index[0])
+                        alFaceIndex.add(index[1])
+                        alFaceIndex.add(index[2])
+
 
                         val vxa = x1 - x0
                         val vya = y1 - y0
@@ -290,31 +339,39 @@ object ShaderUtils {
                         val vyb = y2 - y0
                         val vzb = z2 - z0
 
-                        val vNormal = vectorNormal(
-                                getCrossProduct(
-                                        vxa, vya, vza, vxb, vyb, vzb
-                                )
-                        )
+                        val vNormal = vectorNormal(getCrossProduct(
+                                vxa, vya, vza, vxb, vyb, vzb
+                        ))
 
-                        for (i in 0..2) {
-                            alnResult.add(vNormal[0])
-                            alnResult.add(vNormal[1])
-                            alnResult.add(vNormal[2])
+                        for (tempInxex in index) {
+
+                            var hsn = hmn.get(tempInxex)
+                            if (hsn == null) {
+                                hsn = HashSet()
+                            }
+
+                            hsn.add(Normal(vNormal[0], vNormal[1], vNormal[2]))
+
+                            hmn[tempInxex] = hsn
                         }
                     }
                 }
             } while (temp != null)
 
-            var size = alvResult.size
+            val size = alvResult.size
             vXYZ = FloatArray(size)
             for (i in 0 until size) {
                 vXYZ!![i] = alvResult[i]
             }
 
-            size = alnResult.size
-            nXYZ = FloatArray(size)
-            for (i in 0 until size) {
-                nXYZ!![i] = alnResult[i]
+            nXYZ = FloatArray(alFaceIndex.size * 3)
+            var c = 0
+            for (i in alFaceIndex) {
+                val hsn = hmn[i]
+                val tn = Normal.getAverage(hsn!!)
+                nXYZ!![c++] = tn[0]
+                nXYZ!![c++] = tn[1]
+                nXYZ!![c++] = tn[2]
             }
         } catch (e: Exception) {
             LogUtils.eLog("load error")
