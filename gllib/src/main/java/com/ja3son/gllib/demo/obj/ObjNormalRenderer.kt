@@ -1,8 +1,10 @@
 package com.ja3son.gllib.demo.obj
 
 import android.opengl.GLES32
+import com.ja3son.gllib.R
 import com.ja3son.gllib.controller.BaseRenderer
 import com.ja3son.gllib.util.MatrixState
+import com.ja3son.gllib.util.ShaderUtils
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -11,7 +13,7 @@ class ObjNormalRenderer : BaseRenderer() {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
-        entities.add(ObjNormalEntity("ch.obj"))
+        entities.add(ObjNormalEntity("ch_t.obj", ShaderUtils.initTexture(R.drawable.ghxp)))
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -26,7 +28,7 @@ class ObjNormalRenderer : BaseRenderer() {
         entities[0].yAngle = yAngle
 
         MatrixState.pushMatrix()
-        MatrixState.translate(0f, -2f, -25f)
+        MatrixState.translate(0f, -16f, -60f);
         entities[0].drawSelf()
         MatrixState.popMatrix()
     }

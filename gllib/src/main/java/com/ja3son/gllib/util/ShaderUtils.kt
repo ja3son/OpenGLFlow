@@ -237,6 +237,7 @@ object ShaderUtils {
 
     var vXYZ: FloatArray? = null
     var nXYZ: FloatArray? = null
+    var tST: FloatArray? = null
 
     class Normal(var nx: Float, var ny: Float, var nz: Float) {
         override fun equals(other: Any?): Boolean {
@@ -256,29 +257,25 @@ object ShaderUtils {
 
         companion object {
             const val DIFF = 0.0000001f
-
             fun getAverage(sn: Set<Normal>): FloatArray {
-
                 val result = FloatArray(3)
-
                 for (n in sn) {
                     result[0] += n.nx
                     result[1] += n.ny
                     result[2] += n.nz
                 }
-
                 return vectorNormal(result)
             }
         }
     }
 
     fun loadObj(file: String) {
-
         val alv = ArrayList<Float>()
         val alvResult = ArrayList<Float>()
         val alFaceIndex = ArrayList<Int>()
         val hmn = HashMap<Int, HashSet<Normal>>()
-
+        val alt = ArrayList<Float>()
+        val altResult = ArrayList<Float>()
 
         try {
             val inputStream = res.assets.open(file)
@@ -294,10 +291,11 @@ object ShaderUtils {
                         alv.add(temps[1].toFloat())
                         alv.add(temps[2].toFloat())
                         alv.add(temps[3].toFloat())
+                    } else if (temps[0].trim() == "vt") {
+                        alt.add(temps[1].toFloat())
+                        alt.add(1 - temps[2].toFloat())
                     } else if (temps[0].trim { it <= ' ' } == "f") {
                         val index = IntArray(3)
-
-
                         index[0] = Integer.parseInt(temps[1].split("/")[0]) - 1
 
                         val x0 = alv[3 * index[0]]
@@ -344,21 +342,30 @@ object ShaderUtils {
                         ))
 
                         for (tempInxex in index) {
-
                             var hsn = hmn.get(tempInxex)
                             if (hsn == null) {
                                 hsn = HashSet()
                             }
-
                             hsn.add(Normal(vNormal[0], vNormal[1], vNormal[2]))
-
                             hmn[tempInxex] = hsn
                         }
+
+                        var indexTex = Integer.parseInt(temps[1].split("/")[1]) - 1
+                        altResult.add(alt[indexTex * 2])
+                        altResult.add(alt[indexTex * 2 + 1])
+
+                        indexTex = Integer.parseInt(temps[2].split("/")[1]) - 1
+                        altResult.add(alt[indexTex * 2])
+                        altResult.add(alt[indexTex * 2 + 1])
+
+                        indexTex = Integer.parseInt(temps[3].split("/")[1]) - 1
+                        altResult.add(alt[indexTex * 2])
+                        altResult.add(alt[indexTex * 2 + 1])
                     }
                 }
             } while (temp != null)
 
-            val size = alvResult.size
+            var size = alvResult.size
             vXYZ = FloatArray(size)
             for (i in 0 until size) {
                 vXYZ!![i] = alvResult[i]
@@ -372,6 +379,12 @@ object ShaderUtils {
                 nXYZ!![c++] = tn[0]
                 nXYZ!![c++] = tn[1]
                 nXYZ!![c++] = tn[2]
+            }
+
+            size = altResult.size
+            tST = FloatArray(size)
+            for (i in 0 until size) {
+                tST!![i] = altResult[i]
             }
         } catch (e: Exception) {
             LogUtils.eLog("load error")
