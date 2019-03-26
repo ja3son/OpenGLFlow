@@ -1,10 +1,8 @@
 package com.ja3son.gllib.demo.obj
 
 import android.opengl.GLES32
-import com.ja3son.gllib.R
 import com.ja3son.gllib.controller.BaseRenderer
 import com.ja3son.gllib.util.MatrixState
-import com.ja3son.gllib.util.ShaderUtils
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -12,8 +10,11 @@ import javax.microedition.khronos.opengles.GL10
 class ObjNormalRenderer : BaseRenderer() {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        super.onSurfaceCreated(gl, config)
-        entities.add(ObjNormalEntity("ch_t.obj", ShaderUtils.initTexture(R.drawable.ghxp)))
+        GLES32.glClearColor(0.5f, 0.5f, 0.5f, 1.0f)
+        GLES32.glEnable(GLES32.GL_DEPTH_TEST)
+        MatrixState.setInitStack()
+        entities = arrayListOf()
+        entities.add(ObjNormalCullEntity("ch_n.obj", 0))
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

@@ -391,4 +391,216 @@ object ShaderUtils {
             e.printStackTrace()
         }
     }
+
+    fun loadObjWithNormal(file: String) {
+        val alv = ArrayList<Float>()
+        val alvResult = ArrayList<Float>()
+        val alt = ArrayList<Float>()
+        val altResult = ArrayList<Float>()
+        val aln = ArrayList<Float>()
+        val alnResult = ArrayList<Float>()
+
+        try {
+            val inputStream = res.assets.open(file)
+            val isr = InputStreamReader(inputStream)
+            val br = BufferedReader(isr)
+            var temp: String?
+
+            do {
+                temp = br.readLine()
+                if (temp != null && temp != "") {
+                    val temps = temp.split("[ ]+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    if (temps[0].trim { it <= ' ' } == "v") {
+                        alv.add(temps[1].toFloat())
+                        alv.add(temps[2].toFloat())
+                        alv.add(temps[3].toFloat())
+                    } else if (temps[0].trim() == "vt") {
+                        alt.add(temps[1].toFloat())
+                        alt.add(1 - temps[2].toFloat())
+                    } else if (temps[0].trim().equals("vn")) {
+                        aln.add(temps[1].toFloat())
+                        aln.add(temps[2].toFloat())
+                        aln.add(temps[3].toFloat())
+                    } else if (temps[0].trim { it <= ' ' } == "f") {
+                        var index = Integer.parseInt(temps[1].split("/")[0]) - 1
+                        val x0 = alv[3 * index]
+                        val y0 = alv[3 * index + 1]
+                        val z0 = alv[3 * index + 2]
+                        alvResult.add(x0)
+                        alvResult.add(y0)
+                        alvResult.add(z0)
+
+                        index = Integer.parseInt(temps[2].split("/")[0]) - 1
+                        val x1 = alv[3 * index]
+                        val y1 = alv[3 * index + 1]
+                        val z1 = alv[3 * index + 2]
+                        alvResult.add(x1)
+                        alvResult.add(y1)
+                        alvResult.add(z1)
+
+                        index = Integer.parseInt(temps[3].split("/")[0]) - 1
+                        val x2 = alv[3 * index]
+                        val y2 = alv[3 * index + 1]
+                        val z2 = alv[3 * index + 2]
+                        alvResult.add(x2)
+                        alvResult.add(y2)
+                        alvResult.add(z2)
+
+                        var indexTex = Integer.parseInt(temps[1].split("/")[1]) - 1
+                        altResult.add(alt[indexTex * 2])
+                        altResult.add(alt[indexTex * 2 + 1])
+
+                        indexTex = Integer.parseInt(temps[2].split("/")[1]) - 1
+                        altResult.add(alt[indexTex * 2])
+                        altResult.add(alt[indexTex * 2 + 1])
+
+                        indexTex = Integer.parseInt(temps[3].split("/")[1]) - 1
+                        altResult.add(alt[indexTex * 2])
+                        altResult.add(alt[indexTex * 2 + 1])
+
+                        var indexN = Integer.parseInt(temps[1].split("/")[2]) - 1
+                        val nx0 = aln[3 * indexN]
+                        val ny0 = aln[3 * indexN + 1]
+                        val nz0 = aln[3 * indexN + 2]
+                        alnResult.add(nx0)
+                        alnResult.add(ny0)
+                        alnResult.add(nz0)
+
+                        indexN = Integer.parseInt(temps[2].split("/")[2]) - 1
+                        val nx1 = aln[3 * indexN]
+                        val ny1 = aln[3 * indexN + 1]
+                        val nz1 = aln[3 * indexN + 2]
+                        alnResult.add(nx1)
+                        alnResult.add(ny1)
+                        alnResult.add(nz1)
+
+                        indexN = Integer.parseInt(temps[3].split("/")[2]) - 1
+                        val nx2 = aln[3 * indexN]
+                        val ny2 = aln[3 * indexN + 1]
+                        val nz2 = aln[3 * indexN + 2]
+                        alnResult.add(nx2)
+                        alnResult.add(ny2)
+                        alnResult.add(nz2)
+                    }
+                }
+            } while (temp != null)
+
+            var size = alvResult.size
+            vXYZ = FloatArray(size)
+            for (i in 0 until size) {
+                vXYZ!![i] = alvResult[i]
+            }
+
+            size = alnResult.size
+            nXYZ = FloatArray(size)
+            for (i in 0 until size) {
+                nXYZ!![i] = alnResult[i]
+            }
+
+            size = altResult.size
+            tST = FloatArray(size)
+            for (i in 0 until size) {
+                tST!![i] = altResult[i]
+            }
+        } catch (e: Exception) {
+            LogUtils.eLog("load error")
+            e.printStackTrace()
+        }
+    }
+
+    fun loadObjOrigin(file: String) {
+        val alv = ArrayList<Float>()
+        val alFaceIndex = ArrayList<Int>()
+        val alvResult = ArrayList<Float>()
+        val hmn = HashMap<Int, HashSet<Normal>>()
+
+        try {
+            val inputStream = res.assets.open(file)
+            val isr = InputStreamReader(inputStream)
+            val br = BufferedReader(isr)
+            var temp: String?
+
+            do {
+                temp = br.readLine()
+                if (temp != null && temp != "") {
+                    val temps = temp.split("[ ]+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    if (temps[0].trim { it <= ' ' } == "v") {
+                        alv.add(temps[1].toFloat())
+                        alv.add(temps[2].toFloat())
+                        alv.add(temps[3].toFloat())
+                    } else if (temps[0].trim { it <= ' ' } == "f") {
+                        val index = IntArray(3)
+
+                        index[0] = Integer.parseInt(temps[1].split("/")[0]) - 1
+                        val x0 = alv[3 * index[0]]
+                        val y0 = alv[3 * index[0] + 1]
+                        val z0 = alv[3 * index[0] + 2]
+                        alvResult.add(x0)
+                        alvResult.add(y0)
+                        alvResult.add(z0)
+
+                        index[1] = Integer.parseInt(temps[2].split("/")[0]) - 1
+                        val x1 = alv[3 * index[1]]
+                        val y1 = alv[3 * index[1] + 1]
+                        val z1 = alv[3 * index[1] + 2]
+                        alvResult.add(x1)
+                        alvResult.add(y1)
+                        alvResult.add(z1)
+
+                        index[2] = Integer.parseInt(temps[3].split("/")[0]) - 1
+                        val x2 = alv[3 * index[2]]
+                        val y2 = alv[3 * index[2] + 1]
+                        val z2 = alv[3 * index[2] + 2]
+                        alvResult.add(x2)
+                        alvResult.add(y2)
+                        alvResult.add(z2)
+
+                        alFaceIndex.add(index[0])
+                        alFaceIndex.add(index[1])
+                        alFaceIndex.add(index[2])
+
+                        val vxa = x1 - x0
+                        val vya = y1 - y0
+                        val vza = z1 - z0
+
+                        val vxb = x2 - x0
+                        val vyb = y2 - y0
+                        val vzb = z2 - z0
+
+                        val vNormal = vectorNormal(getCrossProduct(
+                                vxa, vya, vza, vxb, vyb, vzb
+                        ))
+
+                        for (tempInxex in index) {
+                            var hsn = hmn[tempInxex]
+                            if (hsn == null) {
+                                hsn = HashSet()
+                            }
+                            hsn.add(Normal(vNormal[0], vNormal[1], vNormal[2]))
+                            hmn[tempInxex] = hsn
+                        }
+                    }
+                }
+            } while (temp != null)
+
+            var size = alvResult.size
+            vXYZ = FloatArray(size)
+            for (i in 0 until size) {
+                vXYZ!![i] = alvResult[i]
+            }
+
+            nXYZ = FloatArray(alFaceIndex.size * 3)
+            var c = 0
+            for (i in alFaceIndex) {
+                val hsn = hmn[i]
+                val tn = Normal.getAverage(hsn!!)
+                nXYZ!![c++] = tn[0]
+                nXYZ!![c++] = tn[1]
+                nXYZ!![c++] = tn[2]
+            }
+        } catch (e: Exception) {
+            LogUtils.eLog("load error")
+            e.printStackTrace()
+        }
+    }
 }
