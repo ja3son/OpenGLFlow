@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
-import com.ja3son.gllib.demo.obj.ObjNormalRenderer
+import com.ja3son.gllib.demo.obj.ObjFoglRenderer
 import com.ja3son.gllib.util.MatrixState
 
 
@@ -13,12 +13,13 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
 
     private var mPreviousY: Float = 0f
     private var mPreviousX: Float = 0f
+    var cx = 0f
     private val TOUCH_SCALE_FACTOR = 180.0f / 320
     private var renderer: BaseRenderer
 
     init {
         setEGLContextClientVersion(3)
-        renderer = ObjNormalRenderer()
+        renderer = ObjFoglRenderer()
         setLightOffset(-4f)
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY
@@ -33,6 +34,11 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
                 val dx = x - mPreviousX
                 renderer.yAngle += dx * TOUCH_SCALE_FACTOR
                 renderer.xAngle += dy * TOUCH_SCALE_FACTOR
+
+                cx += dx * TOUCH_SCALE_FACTOR
+                cx = Math.max(cx, -200f)
+                cx = Math.min(cx, 200f)
+                renderer.cx = cx
             }
             MotionEvent.ACTION_DOWN -> {
                 renderer.touchIndex++
