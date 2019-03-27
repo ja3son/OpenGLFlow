@@ -29,7 +29,7 @@ class ObjNormalRenderer : BaseRenderer() {
         entities[0].yAngle = yAngle
 
         MatrixState.pushMatrix()
-        MatrixState.translate(0f, -16f, -60f);
+        MatrixState.translate(0f, -16f, -60f)
         entities[0].drawSelf()
         MatrixState.popMatrix()
     }
