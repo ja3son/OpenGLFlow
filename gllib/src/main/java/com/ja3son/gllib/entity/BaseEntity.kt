@@ -76,4 +76,8 @@ abstract class BaseEntity {
         GLES32.glEnableVertexAttribArray(aPosition)
         GLES32.glEnableVertexAttribArray(aColor)
     }
+
+    open fun drawSelf(textureId:Int) {
+        drawSelf()
+    }
 }

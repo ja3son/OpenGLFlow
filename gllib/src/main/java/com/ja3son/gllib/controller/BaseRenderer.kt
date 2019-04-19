@@ -2,6 +2,7 @@ package com.ja3son.gllib.controller
 
 import android.opengl.GLES32
 import android.opengl.GLSurfaceView
+import android.view.MotionEvent
 import com.ja3son.gllib.entity.BaseEntity
 import com.ja3son.gllib.util.MatrixState
 import javax.microedition.khronos.egl.EGLConfig
@@ -40,5 +41,9 @@ open class BaseRenderer : GLSurfaceView.Renderer {
         for (entity in entities) {
             entity.drawSelf()
         }
+    }
+
+    open fun onTouchEvent(event: MotionEvent): Boolean {
+        return false
     }
 }
