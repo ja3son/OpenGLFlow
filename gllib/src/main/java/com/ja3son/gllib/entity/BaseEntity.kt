@@ -8,7 +8,7 @@ import java.nio.FloatBuffer
 
 abstract class BaseEntity {
     protected val FLOAT_SIZE: Int = 4
-    protected val UNIT_SIZE: Float = 1f
+    protected open val UNIT_SIZE: Float = 1f
 
     protected var program: Int = 0
     protected var aPosition: Int = 0
