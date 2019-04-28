@@ -10,16 +10,15 @@ import javax.microedition.khronos.opengles.GL10
 
 
 class TerrainRenderer : BaseRenderer() {
-    var texIdOne: Int = 0
-    var texIdTwo: Int = 0
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
-        val yArray = ShaderUtils.loadLandforms(R.drawable.land, -2f, 40f)
-        texIdOne = ShaderUtils.initMipMapTexture(R.drawable.grass)
-        texIdTwo = ShaderUtils.initMipMapTexture(R.drawable.rock)
-        entities.add(TerrainTransitionEntity((yArray.size - 1), (yArray[0].size - 1),
-                yArray, intArrayOf(texIdOne, texIdTwo)))
+        val texIdOne = ShaderUtils.initTexture(R.drawable.land)
+        val texIdTwo = ShaderUtils.initMipMapTexture(R.drawable.grass)
+        val texIdThree = ShaderUtils.initMipMapTexture(R.drawable.rock)
+        entities.add(TerrainTransitionEntity(ShaderUtils.getWidth(R.drawable.land),
+                ShaderUtils.getHeight(R.drawable.land),
+                intArrayOf(texIdOne, texIdTwo, texIdThree)))
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {

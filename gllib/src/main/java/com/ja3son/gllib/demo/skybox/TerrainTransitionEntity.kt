@@ -10,14 +10,20 @@ import java.nio.FloatBuffer
 
 
 class TerrainTransitionEntity(private val rows: Int, private val cols: Int,
-                              private val yArray: Array<FloatArray>,
                               private val texArray: IntArray) : BaseEntity() {
-    override var UNIT_SIZE = 1.0f //每个小格尺寸
+    override var UNIT_SIZE = 3.0f //每个小格尺寸
+
+    private var texCount: Int = -1
+
     private var startY: Int = -1
     private var ySpan: Int = -1
 
+    private var lowest: Int = -1
+    private var highest: Int = -1
+
     private var sTextureOne: Int = -1
     private var sTextureTwo: Int = -1
+    private var sTextureThree: Int = -1
 
     init {
         init()
@@ -33,27 +39,27 @@ class TerrainTransitionEntity(private val rows: Int, private val cols: Int,
                 val zsz = -UNIT_SIZE * rows / 2 + j * UNIT_SIZE //左上角z坐标
 
                 vertices[count++] = zsx
-                vertices[count++] = yArray[j][i]
+                vertices[count++] = 0f
                 vertices[count++] = zsz
 
                 vertices[count++] = zsx
-                vertices[count++] = yArray[j + 1][i]
+                vertices[count++] = 0f
                 vertices[count++] = zsz + UNIT_SIZE
 
                 vertices[count++] = zsx + UNIT_SIZE
-                vertices[count++] = yArray[j][i + 1]
+                vertices[count++] = 0f
                 vertices[count++] = zsz
 
                 vertices[count++] = zsx + UNIT_SIZE
-                vertices[count++] = yArray[j][i + 1]
+                vertices[count++] = 0f
                 vertices[count++] = zsz
 
                 vertices[count++] = zsx
-                vertices[count++] = yArray[j + 1][i]
+                vertices[count++] = 0f
                 vertices[count++] = zsz + UNIT_SIZE
 
                 vertices[count++] = zsx + UNIT_SIZE
-                vertices[count++] = yArray[j + 1][i + 1]
+                vertices[count++] = 0f
                 vertices[count++] = zsz + UNIT_SIZE
             }
         }
@@ -81,11 +87,17 @@ class TerrainTransitionEntity(private val rows: Int, private val cols: Int,
         aTexCoor = GLES32.glGetAttribLocation(program, "aTexCoor")
         uMVPMatrix = GLES32.glGetUniformLocation(program, "uMVPMatrix")
 
+        texCount = GLES32.glGetUniformLocation(program, "texCount")
+
         startY = GLES32.glGetUniformLocation(program, "startY")
         ySpan = GLES32.glGetUniformLocation(program, "ySpan")
 
+        lowest = GLES32.glGetUniformLocation(program, "lowest")
+        highest = GLES32.glGetUniformLocation(program, "highest")
+
         sTextureOne = GLES32.glGetUniformLocation(program, "sTextureOne")
         sTextureTwo = GLES32.glGetUniformLocation(program, "sTextureTwo")
+        sTextureThree = GLES32.glGetUniformLocation(program, "sTextureThree")
     }
 
     override fun drawSelf() {
@@ -107,15 +119,25 @@ class TerrainTransitionEntity(private val rows: Int, private val cols: Int,
         GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, texArray[1])
         GLES32.glUniform1i(sTextureTwo, 1)
 
+        GLES32.glActiveTexture(GLES32.GL_TEXTURE2)
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, texArray[2])
+        GLES32.glUniform1i(sTextureThree, 2)
+
         GLES32.glUniform1f(startY, 0f)
         GLES32.glUniform1f(ySpan, 30f)
+
+        GLES32.glUniform1f(lowest, -2f)
+        GLES32.glUniform1f(highest, 40f)
+
+        GLES32.glUniform1f(texCount, 16f)
+
         GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
     }
 
     private fun generateTexCoor(rows: Int, cols: Int): FloatArray {
         val result = FloatArray(rows * cols * 6 * 2) //顶点数 * 2
-        val sizew = 16.0f / rows //16 坐标最大值，纹理repeat16次
-        val sizeh = 16.0f / cols
+        val sizew = 1f / rows
+        val sizeh = 1f / cols
         var c = 0
         for (i in 0 until cols) {
             for (j in 0 until rows) {

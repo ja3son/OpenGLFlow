@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.opengl.ETC1Util
 import android.opengl.GLES32
 import android.opengl.GLUtils
@@ -624,21 +623,17 @@ object ShaderUtils {
         }
     }
 
-    fun loadLandforms(index: Int, lowest: Float, highest:Float): Array<FloatArray> {
-        val bt = BitmapFactory.decodeResource(res, index)
-        val colsPlusOne = bt.width
-        val rowsPlusOne = bt.height
-        val result = Array(rowsPlusOne) { FloatArray(colsPlusOne) }
-        for (i in 0 until rowsPlusOne) {
-            for (j in 0 until colsPlusOne) {
-                val color = bt.getPixel(j, i)
-                val r = Color.red(color)
-                val g = Color.green(color)
-                val b = Color.blue(color)
-                val h = (r + g + b) / 3
-                result[i][j] = h / 255f * highest + lowest
-            }
-        }
-        return result
+    fun getWidth(resId:Int): Int {
+        val option = BitmapFactory.Options()
+        option.inJustDecodeBounds = true
+        BitmapFactory.decodeResource(res, resId, option)
+        return option.outWidth
+    }
+
+    fun getHeight(resId:Int): Int {
+        val option = BitmapFactory.Options()
+        option.inJustDecodeBounds = true
+        BitmapFactory.decodeResource(res, resId, option)
+        return option.outHeight
     }
 }
