@@ -10,13 +10,16 @@ import javax.microedition.khronos.opengles.GL10
 
 
 class TerrainRenderer : BaseRenderer() {
-    var texId: Int = 0
+    var texIdOne: Int = 0
+    var texIdTwo: Int = 0
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
-        val yArray = ShaderUtils.loadLandforms(R.drawable.land, -2f, 20f)
-        entities.add(MountainTerrainEntity((yArray.size - 1), (yArray[0].size - 1), yArray))
-        texId = ShaderUtils.initTexture(R.drawable.grass)
+        val yArray = ShaderUtils.loadLandforms(R.drawable.land, -2f, 40f)
+        texIdOne = ShaderUtils.initTexture(R.drawable.grass)
+        texIdTwo = ShaderUtils.initTexture(R.drawable.rock)
+        entities.add(TerrainTransitionEntity((yArray.size - 1), (yArray[0].size - 1),
+                yArray, intArrayOf(texIdOne, texIdTwo)))
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -32,7 +35,7 @@ class TerrainRenderer : BaseRenderer() {
 
         MatrixState.pushMatrix()
         MatrixState.pushMatrix()
-        entities[0].drawSelf(texId)
+        entities[0].drawSelf()
         MatrixState.popMatrix()
 
         MatrixState.popMatrix()
