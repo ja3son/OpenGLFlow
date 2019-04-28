@@ -16,8 +16,8 @@ class TerrainRenderer : BaseRenderer() {
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
         val yArray = ShaderUtils.loadLandforms(R.drawable.land, -2f, 40f)
-        texIdOne = ShaderUtils.initTexture(R.drawable.grass)
-        texIdTwo = ShaderUtils.initTexture(R.drawable.rock)
+        texIdOne = ShaderUtils.initMipMapTexture(R.drawable.grass)
+        texIdTwo = ShaderUtils.initMipMapTexture(R.drawable.rock)
         entities.add(TerrainTransitionEntity((yArray.size - 1), (yArray[0].size - 1),
                 yArray, intArrayOf(texIdOne, texIdTwo)))
     }

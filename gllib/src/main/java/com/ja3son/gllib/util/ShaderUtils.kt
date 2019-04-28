@@ -103,6 +103,25 @@ object ShaderUtils {
         return textureId
     }
 
+    fun initMipMapTexture(drawable: Int): Int {
+        val textures = IntArray(1)
+        GLES32.glGenTextures(1, textures, 0)
+        val textureId = textures[0]
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureId)
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_LINEAR_MIPMAP_LINEAR)
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_LINEAR)
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_WRAP_S, GLES32.GL_REPEAT)
+        GLES32.glTexParameteri(GLES32.GL_TEXTURE_2D, GLES32.GL_TEXTURE_WRAP_T, GLES32.GL_REPEAT)
+
+        val bitmap = BitmapFactory.decodeResource(res, drawable)
+
+        GLUtils.texImage2D(GLES32.GL_TEXTURE_2D, 0, bitmap, 0)
+        GLES32.glGenerateMipmap(GLES32.GL_TEXTURE_2D)
+        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, 0)
+        bitmap.recycle()
+        return textureId
+    }
+
     fun initTextureEtc1(raw: Int): Int {
         val textures = IntArray(1)
         GLES32.glGenTextures(1, textures, 0)
