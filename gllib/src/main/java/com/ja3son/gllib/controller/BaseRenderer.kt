@@ -13,7 +13,6 @@ open class BaseRenderer : GLSurfaceView.Renderer {
     var ratio: Float = 0.0f
     var yAngle = 0f
     var xAngle = 0f
-    var cx = 0f
     var touchIndex = 0
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
@@ -43,7 +42,7 @@ open class BaseRenderer : GLSurfaceView.Renderer {
         }
     }
 
-    open fun onTouchEvent(event: MotionEvent): Boolean {
+    open fun onTouchEvent(event: MotionEvent?): Boolean {
         return false
     }
 }

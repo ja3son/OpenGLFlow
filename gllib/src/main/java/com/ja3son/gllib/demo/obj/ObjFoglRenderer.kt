@@ -9,6 +9,7 @@ import javax.microedition.khronos.opengles.GL10
 
 class ObjFoglRenderer : BaseRenderer() {
     private val disWithCenter = 12.0f
+    var cx = 150f
     var cy = 150f
     var cz = 400f
 

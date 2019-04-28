@@ -1,4 +1,4 @@
-package com.ja3son.gllib.demo.skybox
+package com.ja3son.gllib.demo.skybox.terrain
 
 import android.opengl.GLES32
 import com.ja3son.gllib.entity.BaseEntity
