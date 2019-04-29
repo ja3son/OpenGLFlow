@@ -13,6 +13,7 @@ import javax.microedition.khronos.opengles.GL10
 class MirrorRenderer : BaseRenderer() {
     var texOneId: Int = 0
     var texTwoId: Int = 0
+    var texThreeId: Int = 0
     lateinit var ballController: BallController
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
@@ -20,6 +21,7 @@ class MirrorRenderer : BaseRenderer() {
         GLES32.glDisable(GLES32.GL_DEPTH_TEST)
         texOneId = ShaderUtils.initTexture(R.drawable.basketball)
         texTwoId = ShaderUtils.initTexture(R.drawable.floor)
+        texThreeId = ShaderUtils.initTexture(R.drawable.floor_transparent)
         val ballEntity = BallEntity(Constant.BALL_SCALE)
         ballController = BallController(ballEntity, Constant.BALL_SCALE)
         entities.add(TextRectEntity(4f, 2.568f))
@@ -37,15 +39,23 @@ class MirrorRenderer : BaseRenderer() {
         entities[0].yAngle = yAngle
 
         MatrixState.pushMatrix()
-        MatrixState.translate(0f, -Constant.FLOOR_Y, 0f)
 
         MatrixState.pushMatrix()
         MatrixState.translate(0f, Constant.FLOOR_Y, 0f)
-        MatrixState.rotate(20f, 1f, 0f, 0f)
         entities[0].drawSelf(texTwoId)
         MatrixState.popMatrix()
 
         ballController.drawSelfMirror(texOneId)
+        GLES32.glEnable(GLES32.GL_BLEND)
+        GLES32.glBlendFunc(GLES32.GL_SRC_ALPHA, GLES32.GL_ONE_MINUS_SRC_ALPHA)
+
+        MatrixState.pushMatrix()
+        MatrixState.translate(0f, Constant.FLOOR_Y, 0f)
+        entities[0].drawSelf(texThreeId)
+        MatrixState.popMatrix()
+
+        GLES32.glDisable(GLES32.GL_BLEND)
+
         ballController.drawSelf(texOneId)
 
         MatrixState.popMatrix()
