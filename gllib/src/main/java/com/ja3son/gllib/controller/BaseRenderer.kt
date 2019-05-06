@@ -14,6 +14,9 @@ open class BaseRenderer : GLSurfaceView.Renderer {
     var yAngle = 0f
     var xAngle = 0f
     var touchIndex = 0
+    private var mPreviousY: Float = 0f
+    private var mPreviousX: Float = 0f
+    private val TOUCH_SCALE_FACTOR = 180.0f / 320
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         GLES32.glClearColor(0.5f, 0.5f, 0.5f, 1.0f)
@@ -43,6 +46,18 @@ open class BaseRenderer : GLSurfaceView.Renderer {
     }
 
     open fun onTouchEvent(event: MotionEvent?): Boolean {
-        return false
+        val y: Float = event!!.y
+        val x: Float = event.x
+        when (event.action) {
+            MotionEvent.ACTION_MOVE -> {
+                val dy = y - mPreviousY
+                val dx = x - mPreviousX
+                yAngle += dx * TOUCH_SCALE_FACTOR
+                xAngle += dy * TOUCH_SCALE_FACTOR
+            }
+        }
+        mPreviousY = y
+        mPreviousX = x
+        return true
     }
 }

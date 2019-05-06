@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
-import com.ja3son.gllib.demo.skybox.font.FontRenderer
+import com.ja3son.gllib.demo.skybox.npr.NPRRenderer
 import com.ja3son.gllib.util.MatrixState
 
 
@@ -15,8 +15,8 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
 
     init {
         setEGLContextClientVersion(3)
-        renderer = FontRenderer()
-        setLightOffset(-4f)
+        renderer = NPRRenderer()
+        setLightOffset(20f)
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY
     }
@@ -26,6 +26,6 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
     }
 
     fun setLightOffset(lightOffset: Float) {
-        MatrixState.setLightLocation(lightOffset, 0f, 1.5f)
+        MatrixState.setLightLocation(lightOffset, 20f, 20f)
     }
 }

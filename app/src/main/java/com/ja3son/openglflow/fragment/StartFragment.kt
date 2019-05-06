@@ -43,7 +43,7 @@ class StartFragment : Fragment(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-        gl_view.setLightOffset((seekBar!!.max / 2.0f - progress) / (seekBar.max / 2.0f) * -4f)
+        gl_view.setLightOffset((seekBar!!.max / 2.0f - progress) / (seekBar.max / 2.0f) * 20f)
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
