@@ -6,15 +6,12 @@ import com.ja3son.gllib.util.MatrixState
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-
 class NPRRenderer : BaseRenderer() {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES32.glClearColor(0.5f, 0.5f, 0.5f, 1.0f)
-        GLES32.glEnable(GLES32.GL_DEPTH_TEST)
-        MatrixState.setInitStack()
-        entities = arrayListOf()
+        super.onSurfaceCreated(gl, config)
         entities.add(NPREntity("ch_n.obj"))
+        entities.add(EdgeEntity("ch_n.obj"))
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -25,11 +22,18 @@ class NPRRenderer : BaseRenderer() {
 
     override fun onDrawFrame(gl: GL10?) {
         GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
-        entities[0].xAngle = xAngle
-        entities[0].yAngle = yAngle
+        for (entity in entities) {
+            entity.xAngle = xAngle
+            entity.yAngle = yAngle
+        }
 
         MatrixState.pushMatrix()
         MatrixState.translate(0f, 0f, -20f)
+
+        GLES32.glFrontFace(GLES32.GL_CW)
+        entities[1].drawSelf()
+
+        GLES32.glFrontFace(GLES32.GL_CCW)
         entities[0].drawSelf()
         MatrixState.popMatrix()
     }

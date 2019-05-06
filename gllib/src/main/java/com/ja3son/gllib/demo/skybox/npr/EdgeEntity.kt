@@ -9,7 +9,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
-class NPREntity(private val fName: String) : BaseEntity() {
+class EdgeEntity(private val fName: String) : BaseEntity() {
 
     init {
         init()
@@ -20,7 +20,6 @@ class NPREntity(private val fName: String) : BaseEntity() {
         ShaderUtils.loadObjOrigin(fName)
         val vertices = ShaderUtils.vXYZ
         val normals = ShaderUtils.nXYZ
-        val texCoords = ShaderUtils.tST
 
         if (vertices != null) {
             vCounts = vertices.size / 3
@@ -34,18 +33,12 @@ class NPREntity(private val fName: String) : BaseEntity() {
                     .order(ByteOrder.nativeOrder()).asFloatBuffer()
                     .put(normals).position(0) as FloatBuffer
         }
-
-        if (texCoords != null) {
-            texCoorBuffer = ByteBuffer.allocateDirect(texCoords.size * FLOAT_SIZE)
-                    .order(ByteOrder.nativeOrder()).asFloatBuffer()
-                    .put(texCoords).position(0) as FloatBuffer
-        }
     }
 
     override fun initShader() {
         program = ShaderUtils.createProgram(
-                ShaderUtils.loadFromAssetsFile("npr_vertex.glsl"),
-                ShaderUtils.loadFromAssetsFile("npr_fragment.glsl")
+                ShaderUtils.loadFromAssetsFile("edge_vertex.glsl"),
+                ShaderUtils.loadFromAssetsFile("edge_fragment.glsl")
         )
     }
 
@@ -53,9 +46,6 @@ class NPREntity(private val fName: String) : BaseEntity() {
         aPosition = GLES30.glGetAttribLocation(program, "aPosition")
         aNormal = GLES30.glGetAttribLocation(program, "aNormal")
         uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
-        uMMatrix = GLES30.glGetUniformLocation(program, "uMMatrix")
-        uLightLocation = GLES30.glGetUniformLocation(program, "uLightLocation")
-        uCamera = GLES30.glGetUniformLocation(program, "uCamera")
     }
 
     override fun drawSelf() {
@@ -64,9 +54,6 @@ class NPREntity(private val fName: String) : BaseEntity() {
         MatrixState.rotate(yAngle, 0f, 1f, 0f)
         GLES32.glUseProgram(program)
         GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
-        GLES32.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
-        GLES32.glUniform3fv(uLightLocation, 1, MatrixState.lightPositionFB)
-        GLES32.glUniform3fv(uCamera, 1, MatrixState.cameraFB)
         GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
         GLES32.glVertexAttribPointer(aNormal, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, normalBuffer)
         GLES32.glEnableVertexAttribArray(aPosition)
