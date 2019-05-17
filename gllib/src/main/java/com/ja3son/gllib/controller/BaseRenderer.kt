@@ -11,6 +11,8 @@ import javax.microedition.khronos.opengles.GL10
 open class BaseRenderer : GLSurfaceView.Renderer {
     lateinit var entities: MutableList<BaseEntity>
     var ratio: Float = 0.0f
+    var width = 0
+    var height = 0
     var yAngle = 0f
     var xAngle = 0f
     var touchIndex = 0
@@ -27,6 +29,8 @@ open class BaseRenderer : GLSurfaceView.Renderer {
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+        this.width = width
+        this.height = height
         GLES32.glViewport(0, 0, width, height)
         ratio = width / height.toFloat()
         MatrixState.setProjectFrustum(-ratio * 0.4f, ratio * 0.4f, -1 * 0.4f, 1 * 0.4f, 1f, 50f)
