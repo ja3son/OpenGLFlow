@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
-import com.ja3son.gllib.demo.test.tailoring.TailoringRenderer
+import com.ja3son.gllib.demo.sensor.SensorRenderer
 import com.ja3son.gllib.util.MatrixState
 
 
@@ -16,7 +16,7 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
     init {
         setEGLContextClientVersion(3)
         setEGLConfigChooser(8, 8, 8, 8, 16, 8)
-        renderer = TailoringRenderer()
+        renderer = SensorRenderer()
         setLightOffset(20f)
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY

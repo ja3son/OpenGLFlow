@@ -47,6 +47,10 @@ object MatrixState {
         stackTop--
     }
 
+    fun matrix(mult: FloatArray) {
+        Matrix.multiplyMM(currentMatrix, 0, currentMatrix, 0, mult, 0)
+    }
+
     fun translate(x: Float, y: Float, z: Float) {
         Matrix.translateM(currentMatrix, 0, x, y, z)
     }
