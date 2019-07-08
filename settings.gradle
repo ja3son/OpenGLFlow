@@ -1,1 +1,1 @@
-include ':app', ':utils', ':gllib', ':temp', ':libdemo'
+include ':app', ':utils', ':gllib', ':libdemo', ':cgldemo', ':cgl'

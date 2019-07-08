@@ -9,6 +9,7 @@ import android.opengl.GLES32
 import android.opengl.GLUtils
 import android.os.Build
 import android.support.annotation.RequiresApi
+import com.ja3son.cgl.GL2JNILib
 import com.ja3son.utils.log.LogUtils
 import java.io.BufferedReader
 import java.io.IOException
@@ -22,6 +23,7 @@ object ShaderUtils {
 
     fun register(context: Context) {
         this.res = context.resources
+        GL2JNILib.nativeSetAssetManager(res.assets)
     }
 
     fun loadShader(shaderType: Int, source: String): Int {
@@ -623,14 +625,14 @@ object ShaderUtils {
         }
     }
 
-    fun getWidth(resId:Int): Int {
+    fun getWidth(resId: Int): Int {
         val option = BitmapFactory.Options()
         option.inJustDecodeBounds = true
         BitmapFactory.decodeResource(res, resId, option)
         return option.outWidth
     }
 
-    fun getHeight(resId:Int): Int {
+    fun getHeight(resId: Int): Int {
         val option = BitmapFactory.Options()
         option.inJustDecodeBounds = true
         BitmapFactory.decodeResource(res, resId, option)

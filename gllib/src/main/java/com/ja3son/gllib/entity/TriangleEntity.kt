@@ -1,26 +1,14 @@
 package com.ja3son.gllib.entity
 
 import android.opengl.GLES32
-import android.opengl.Matrix
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
-import org.jetbrains.anko.doAsync
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
 
 class TriangleEntity : BaseEntity() {
-    private var rotate: Float = 0.0f
-
     init {
-        doAsync {
-            while (true) {
-                Thread.sleep(20)
-                rotate += 0.375f
-                Matrix.setIdentityM(modelMatrix, 0)
-                Matrix.rotateM(modelMatrix, 0, rotate, 1.0f, 0.0f, 0.0f)
-            }
-        }
         init()
     }
 
@@ -62,7 +50,9 @@ class TriangleEntity : BaseEntity() {
 
     override fun drawSelf() {
         GLES32.glUseProgram(program)
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(modelMatrix), 0)
+        MatrixState.rotate(yAngle, 0f, 1f, 0f)
+        MatrixState.rotate(xAngle, 1f, 0f, 0f)
+        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
         GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
         GLES32.glVertexAttribPointer(aColor, colorLen, GLES32.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
         GLES32.glEnableVertexAttribArray(aPosition)
