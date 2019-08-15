@@ -86,6 +86,20 @@ object ShaderUtils {
         }
     }
 
+    fun genTexture(target: Int, width: Int, height: Int): Int {
+        val textures = IntArray(1)
+        GLES32.glGenTextures(1, textures, 0)
+        val textureId = textures[0]
+        GLES32.glBindTexture(target, textureId)
+        GLES32.glTexParameteri(target, GLES32.GL_TEXTURE_MIN_FILTER, GLES32.GL_LINEAR)
+        GLES32.glTexParameteri(target, GLES32.GL_TEXTURE_MAG_FILTER, GLES32.GL_LINEAR)
+        GLES32.glTexParameteri(target, GLES32.GL_TEXTURE_WRAP_S, GLES32.GL_CLAMP_TO_EDGE)
+        GLES32.glTexParameteri(target, GLES32.GL_TEXTURE_WRAP_T, GLES32.GL_CLAMP_TO_EDGE)
+        GLES32.glTexImage2D(target, 0, GLES32.GL_RGBA, width, height, 0, GLES32.GL_RGBA, GLES32.GL_UNSIGNED_BYTE, null)
+        GLES32.glBindTexture(target, 0)
+        return textureId
+    }
+
     fun initTexture(drawable: Int): Int {
         val textures = IntArray(1)
         GLES32.glGenTextures(1, textures, 0)
