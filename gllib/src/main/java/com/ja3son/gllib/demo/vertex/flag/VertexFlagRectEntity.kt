@@ -1,4 +1,4 @@
-package com.ja3son.gllib.demo.vertex
+package com.ja3son.gllib.demo.vertex.flag
 
 import android.opengl.GLES32
 import com.ja3son.gllib.entity.BaseEntity
