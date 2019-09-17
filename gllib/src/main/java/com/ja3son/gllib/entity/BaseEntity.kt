@@ -80,8 +80,4 @@ abstract class BaseEntity {
     open fun drawSelf(textureId: Int) {
         drawSelf()
     }
-
-    open fun drawSelfEdge() {
-
-    }
 }
