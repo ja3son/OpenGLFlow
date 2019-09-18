@@ -1,4 +1,4 @@
-package com.ja3son.gllib.demo.fragment
+package com.ja3son.gllib.demo.fragment.ball
 
 import android.opengl.GLES32
 import com.ja3son.gllib.entity.BaseEntity
