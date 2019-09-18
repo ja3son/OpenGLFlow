@@ -19,7 +19,7 @@ class BallRenderer : BaseRenderer() {
         super.onSurfaceChanged(gl, width, height)
         MatrixState.setProjectFrustum(-ratio, ratio, -1f, 1f, 2f, 1000f)
         MatrixState.setCamera(0f, 0f, 0f, 0f, 0f, -1f, 0f, 1.0f, 0.0f)
-        entities.add(BallEntity())
+        entities.add(VolleyBallEntity())
     }
 
     override fun onDrawFrame(gl: GL10?) {

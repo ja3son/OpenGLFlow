@@ -11,7 +11,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 
-class BallEntity : BaseEntity() {
+class BrickBallEntity : BaseEntity() {
 
     init {
         init()
@@ -114,7 +114,7 @@ class BallEntity : BaseEntity() {
     override fun initShader() {
         program = ShaderUtils.createProgram(
                 ShaderUtils.loadFromAssetsFile("ball_frag_anim_vertex.glsl"),
-                ShaderUtils.loadFromAssetsFile("ball_frag_anim_fragment.glsl")
+                ShaderUtils.loadFromAssetsFile("brick_ball_frag_anim_fragment.glsl")
         )
     }
 
