@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion compileVersion
 
     defaultConfig {
         applicationId "com.ja3son.cgldemo"
-        minSdkVersion 18
-        targetSdkVersion 28
+        minSdkVersion minVersion
+        targetSdkVersion targetVersion
         versionCode 1
         versionName "1.0"
 

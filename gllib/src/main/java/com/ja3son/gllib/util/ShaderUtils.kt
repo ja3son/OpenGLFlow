@@ -652,4 +652,32 @@ object ShaderUtils {
         BitmapFactory.decodeResource(res, resId, option)
         return option.outHeight
     }
+
+    fun loadTex3D(fileName: String): Tex3D {
+        val result = Tex3D()
+        try {
+            val fin = res.assets.open(fileName)
+            var buf = ByteArray(4)
+            fin.read(buf)
+            result.width = buf[0].toInt()
+            fin.read(buf)
+            result.height = buf[0].toInt()
+            fin.read(buf)
+            result.depth = buf[0].toInt()
+            buf = ByteArray(result.width * result.height * result.depth * 4)
+            fin.read(buf)
+            fin.close()
+            result.data = buf
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return result
+    }
+
+    class Tex3D {
+        var width: Int = 0
+        var height: Int = 0
+        var depth: Int = 0
+        var data: ByteArray? = null
+    }
 }
