@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.opengl.ETC1Util
 import android.opengl.GLES32
 import android.opengl.GLUtils
@@ -679,5 +680,25 @@ object ShaderUtils {
         var height: Int = 0
         var depth: Int = 0
         var data: ByteArray? = null
+    }
+
+    fun loadLandForms(index: Int): Array<FloatArray> {
+        val LAND_HIGH_ADJUST = 2f
+        val LAND_HIGHEST = 60f
+        val bt = BitmapFactory.decodeResource(res, index)
+        val colsPlusOne = bt.width
+        val rowsPlusOne = bt.height
+        val result = Array(rowsPlusOne) { FloatArray(colsPlusOne) }
+        for (i in 0 until rowsPlusOne) {
+            for (j in 0 until colsPlusOne) {
+                val color = bt.getPixel(j, i)
+                val r = Color.red(color)
+                val g = Color.green(color)
+                val b = Color.blue(color)
+                val h = (r + g + b) / 3
+                result[i][j] = h * LAND_HIGHEST / 255 - LAND_HIGH_ADJUST
+            }
+        }
+        return result
     }
 }
