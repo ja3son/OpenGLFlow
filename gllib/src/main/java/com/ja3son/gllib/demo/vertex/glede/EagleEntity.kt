@@ -1,6 +1,6 @@
 package com.ja3son.gllib.demo.vertex.glede
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.entity.BaseEntity
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
@@ -51,7 +51,7 @@ class EagleEntity : BaseEntity() {
     }
 
     override fun initVertexData() {
-        GLES32.glGenBuffers(4, bufferIds, 0)
+        GLES30.glGenBuffers(4, bufferIds, 0)
 
         vertexBufferOneId = bufferIds[0]
         vertexBufferTwoId = bufferIds[1]
@@ -67,8 +67,8 @@ class EagleEntity : BaseEntity() {
                     .order(ByteOrder.nativeOrder()).asFloatBuffer()
                     .put(texCoords).position(0) as FloatBuffer
 
-            GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, texCoordBufferId)
-            GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER, texCoords.size * FLOAT_SIZE, texCoorBuffer, GLES32.GL_STATIC_DRAW)
+            GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, texCoordBufferId)
+            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, texCoords.size * FLOAT_SIZE, texCoorBuffer, GLES30.GL_STATIC_DRAW)
         }
 
         if (vertices != null) {
@@ -77,8 +77,8 @@ class EagleEntity : BaseEntity() {
                     .order(ByteOrder.nativeOrder()).asFloatBuffer()
                     .put(vertices).position(0) as FloatBuffer
 
-            GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, vertexBufferOneId)
-            GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER, vertices.size * FLOAT_SIZE, verticesBuffer, GLES32.GL_STATIC_DRAW)
+            GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBufferOneId)
+            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, vertices.size * FLOAT_SIZE, verticesBuffer, GLES30.GL_STATIC_DRAW)
         }
 
         ShaderUtils.loadObj("eagle_two.obj")
@@ -87,8 +87,8 @@ class EagleEntity : BaseEntity() {
         if (vertices != null) {
             verticesBuffer.put(vertices).position(0)
 
-            GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, vertexBufferTwoId)
-            GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER, vertices.size * FLOAT_SIZE, verticesBuffer, GLES32.GL_STATIC_DRAW)
+            GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBufferTwoId)
+            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, vertices.size * FLOAT_SIZE, verticesBuffer, GLES30.GL_STATIC_DRAW)
         }
 
         ShaderUtils.loadObj("eagle_three.obj")
@@ -97,11 +97,11 @@ class EagleEntity : BaseEntity() {
         if (vertices != null) {
             verticesBuffer.put(vertices).position(0)
 
-            GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, vertexBufferThreeId)
-            GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER, vertices.size * FLOAT_SIZE, verticesBuffer, GLES32.GL_STATIC_DRAW)
+            GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBufferThreeId)
+            GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, vertices.size * FLOAT_SIZE, verticesBuffer, GLES30.GL_STATIC_DRAW)
         }
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
     override fun initShader() {
@@ -112,49 +112,49 @@ class EagleEntity : BaseEntity() {
     }
 
     override fun initShaderParams() {
-        aOnePosition = GLES32.glGetAttribLocation(program, "aOnePosition")
-        aTwoPosition = GLES32.glGetAttribLocation(program, "aTwoPosition")
-        aThreePosition = GLES32.glGetAttribLocation(program, "aThreePosition")
-        aTexCoor = GLES32.glGetAttribLocation(program, "aTexCoor")
-        uMVPMatrix = GLES32.glGetUniformLocation(program, "uMVPMatrix")
-        uFlag = GLES32.glGetUniformLocation(program, "flag")
+        aOnePosition = GLES30.glGetAttribLocation(program, "aOnePosition")
+        aTwoPosition = GLES30.glGetAttribLocation(program, "aTwoPosition")
+        aThreePosition = GLES30.glGetAttribLocation(program, "aThreePosition")
+        aTexCoor = GLES30.glGetAttribLocation(program, "aTexCoor")
+        uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
+        uFlag = GLES30.glGetUniformLocation(program, "flag")
     }
 
     override fun drawSelf(textureId: Int) {
         MatrixState.rotate(xAngle, 1f, 0f, 0f)
         MatrixState.rotate(yAngle, 0f, 1f, 0f)
-        GLES32.glUseProgram(program)
+        GLES30.glUseProgram(program)
 
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
-        GLES32.glUniform1f(uFlag, flagValue)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glUniform1f(uFlag, flagValue)
 
-        GLES32.glEnableVertexAttribArray(aOnePosition)
-        GLES32.glEnableVertexAttribArray(aTwoPosition)
-        GLES32.glEnableVertexAttribArray(aThreePosition)
-        GLES32.glEnableVertexAttribArray(aTexCoor)
+        GLES30.glEnableVertexAttribArray(aOnePosition)
+        GLES30.glEnableVertexAttribArray(aTwoPosition)
+        GLES30.glEnableVertexAttribArray(aThreePosition)
+        GLES30.glEnableVertexAttribArray(aTexCoor)
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, vertexBufferOneId)
-        GLES32.glVertexAttribPointer(aOnePosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBufferOneId)
+        GLES30.glVertexAttribPointer(aOnePosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, 0)
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, vertexBufferTwoId)
-        GLES32.glVertexAttribPointer(aTwoPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBufferTwoId)
+        GLES30.glVertexAttribPointer(aTwoPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, 0)
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, vertexBufferThreeId)
-        GLES32.glVertexAttribPointer(aThreePosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBufferThreeId)
+        GLES30.glVertexAttribPointer(aThreePosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, 0)
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, texCoordBufferId)
-        GLES32.glVertexAttribPointer(aTexCoor, texLen, GLES32.GL_FLOAT, false, texLen * FLOAT_SIZE, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, texCoordBufferId)
+        GLES30.glVertexAttribPointer(aTexCoor, texLen, GLES30.GL_FLOAT, false, texLen * FLOAT_SIZE, 0)
 
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE0)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureId)
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId)
 
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vCounts)
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
 
-        GLES32.glDisableVertexAttribArray(aOnePosition)
-        GLES32.glDisableVertexAttribArray(aTwoPosition)
-        GLES32.glDisableVertexAttribArray(aThreePosition)
-        GLES32.glDisableVertexAttribArray(aTexCoor)
+        GLES30.glDisableVertexAttribArray(aOnePosition)
+        GLES30.glDisableVertexAttribArray(aTwoPosition)
+        GLES30.glDisableVertexAttribArray(aThreePosition)
+        GLES30.glDisableVertexAttribArray(aTexCoor)
     }
 }

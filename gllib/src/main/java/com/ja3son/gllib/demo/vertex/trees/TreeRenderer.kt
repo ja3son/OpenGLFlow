@@ -1,6 +1,6 @@
 package com.ja3son.gllib.demo.vertex.trees
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.controller.BaseRenderer
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
@@ -24,8 +24,8 @@ class TreeRenderer : BaseRenderer() {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES32.glDisable(GLES32.GL_CULL_FACE)
-        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        GLES30.glDisable(GLES30.GL_CULL_FACE)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
         for (entity in entities) {
             entity.xAngle = xAngle

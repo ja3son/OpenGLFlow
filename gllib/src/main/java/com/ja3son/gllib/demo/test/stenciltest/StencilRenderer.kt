@@ -1,6 +1,6 @@
 package com.ja3son.gllib.demo.test.stenciltest
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import android.view.MotionEvent
 import com.ja3son.gllib.R
 import com.ja3son.gllib.controller.BaseRenderer
@@ -22,7 +22,7 @@ class StencilRenderer : BaseRenderer() {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
-        GLES32.glDisable(GLES32.GL_DEPTH_TEST)
+        GLES30.glDisable(GLES30.GL_DEPTH_TEST)
         texOneId = ShaderUtils.initTexture(R.drawable.basketball)
         texTwoId = ShaderUtils.initTexture(R.drawable.floor)
         texThreeId = ShaderUtils.initTexture(R.drawable.floor_transparent)
@@ -38,16 +38,16 @@ class StencilRenderer : BaseRenderer() {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
         entities[0].xAngle = xAngle
         entities[0].yAngle = yAngle
 
         MatrixState.pushMatrix()
 
-        GLES32.glClear(GLES32.GL_STENCIL_BUFFER_BIT)
-        GLES32.glEnable(GLES32.GL_STENCIL_TEST)
-        GLES32.glStencilFunc(GLES32.GL_ALWAYS, 1, 1)
-        GLES32.glStencilOp(GLES32.GL_KEEP, GLES32.GL_KEEP, GLES32.GL_REPLACE)
+        GLES30.glClear(GLES30.GL_STENCIL_BUFFER_BIT)
+        GLES30.glEnable(GLES30.GL_STENCIL_TEST)
+        GLES30.glStencilFunc(GLES30.GL_ALWAYS, 1, 1)
+        GLES30.glStencilOp(GLES30.GL_KEEP, GLES30.GL_KEEP, GLES30.GL_REPLACE)
 
         MatrixState.pushMatrix()
         MatrixState.translate(0f, Constant.FLOOR_Y, 0f)
@@ -55,13 +55,13 @@ class StencilRenderer : BaseRenderer() {
         entities[0].drawSelf(texTwoId)
         MatrixState.popMatrix()
 
-        GLES32.glStencilFunc(GLES32.GL_EQUAL, 1, 1)
-        GLES32.glStencilOp(GLES32.GL_KEEP, GLES32.GL_KEEP, GLES32.GL_KEEP)
+        GLES30.glStencilFunc(GLES30.GL_EQUAL, 1, 1)
+        GLES30.glStencilOp(GLES30.GL_KEEP, GLES30.GL_KEEP, GLES30.GL_KEEP)
         ballController.drawSelfMirror(texOneId)
-        GLES32.glDisable(GLES32.GL_STENCIL_TEST)
+        GLES30.glDisable(GLES30.GL_STENCIL_TEST)
 
-        GLES32.glEnable(GLES32.GL_BLEND)
-        GLES32.glBlendFunc(GLES32.GL_SRC_ALPHA, GLES32.GL_ONE_MINUS_SRC_ALPHA)
+        GLES30.glEnable(GLES30.GL_BLEND)
+        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
 
         MatrixState.pushMatrix()
         MatrixState.translate(0f, Constant.FLOOR_Y, 0f)
@@ -69,7 +69,7 @@ class StencilRenderer : BaseRenderer() {
         entities[0].drawSelf(texThreeId)
         MatrixState.popMatrix()
 
-        GLES32.glDisable(GLES32.GL_BLEND)
+        GLES30.glDisable(GLES30.GL_BLEND)
 
         ballController.drawSelf(texOneId)
 

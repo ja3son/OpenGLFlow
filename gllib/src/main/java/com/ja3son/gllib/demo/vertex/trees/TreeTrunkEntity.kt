@@ -1,6 +1,6 @@
 package com.ja3son.gllib.demo.vertex.trees
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.entity.BaseEntity
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
@@ -32,10 +32,10 @@ class TreeTrunkEntity : BaseEntity() {
 
     override fun initVertexData() {
 
-        GLES32.glGenVertexArrays(1, vao, 0)
+        GLES30.glGenVertexArrays(1, vao, 0)
         vaoIndex = vao[0]
 
-        GLES32.glGenBuffers(2, bufferIds, 0)
+        GLES30.glGenBuffers(2, bufferIds, 0)
         vertexBufferId = bufferIds[0]
         texCoordBufferId = bufferIds[1]
 
@@ -104,17 +104,17 @@ class TreeTrunkEntity : BaseEntity() {
                 .order(ByteOrder.nativeOrder()).asFloatBuffer()
                 .put(vertices).position(0) as FloatBuffer
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, vertexBufferId)
-        GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER, vertices.size * FLOAT_SIZE, verticesBuffer, GLES32.GL_STATIC_DRAW)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBufferId)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, vertices.size * FLOAT_SIZE, verticesBuffer, GLES30.GL_STATIC_DRAW)
 
         texCoorBuffer = ByteBuffer.allocateDirect(texCoords.size * FLOAT_SIZE)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer()
                 .put(texCoords).position(0) as FloatBuffer
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, texCoordBufferId)
-        GLES32.glBufferData(GLES32.GL_ARRAY_BUFFER, texCoords.size * FLOAT_SIZE, texCoorBuffer, GLES32.GL_STATIC_DRAW)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, texCoordBufferId)
+        GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, texCoords.size * FLOAT_SIZE, texCoorBuffer, GLES30.GL_STATIC_DRAW)
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
     override fun initShader() {
@@ -125,11 +125,11 @@ class TreeTrunkEntity : BaseEntity() {
     }
 
     override fun initShaderParams() {
-        aPosition = GLES32.glGetAttribLocation(program, "aPosition")
-        aTexCoor = GLES32.glGetAttribLocation(program, "aTexCoor")
-        uMVPMatrix = GLES32.glGetUniformLocation(program, "uMVPMatrix")
-        uBendR = GLES32.glGetUniformLocation(program, "uBendR")
-        uDirectionDegree = GLES32.glGetUniformLocation(program, "uDirectionDegree")
+        aPosition = GLES30.glGetAttribLocation(program, "aPosition")
+        aTexCoor = GLES30.glGetAttribLocation(program, "aTexCoor")
+        uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
+        uBendR = GLES30.glGetUniformLocation(program, "uBendR")
+        uDirectionDegree = GLES30.glGetUniformLocation(program, "uDirectionDegree")
     }
 
     var bend: Int = 0
@@ -141,26 +141,26 @@ class TreeTrunkEntity : BaseEntity() {
         bend %= 500
         MatrixState.rotate(xAngle, 1f, 0f, 0f)
         MatrixState.rotate(yAngle, 0f, 1f, 0f)
-        GLES32.glUseProgram(program)
+        GLES30.glUseProgram(program)
 
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
-        GLES32.glUniform1f(uBendR, bend.toFloat())
-        GLES32.glUniform1f(uDirectionDegree, index.toFloat())
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glUniform1f(uBendR, bend.toFloat())
+        GLES30.glUniform1f(uDirectionDegree, index.toFloat())
 
-        GLES32.glEnableVertexAttribArray(aPosition)
-        GLES32.glEnableVertexAttribArray(aTexCoor)
+        GLES30.glEnableVertexAttribArray(aPosition)
+        GLES30.glEnableVertexAttribArray(aTexCoor)
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, vertexBufferId)
-        GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBufferId)
+        GLES30.glVertexAttribPointer(aPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, 0)
 
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, texCoordBufferId)
-        GLES32.glVertexAttribPointer(aTexCoor, texLen, GLES32.GL_FLOAT, false, texLen * FLOAT_SIZE, 0)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, texCoordBufferId)
+        GLES30.glVertexAttribPointer(aTexCoor, texLen, GLES30.GL_FLOAT, false, texLen * FLOAT_SIZE, 0)
 
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE0)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureId)
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId)
 
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
-        GLES32.glBindBuffer(GLES32.GL_ARRAY_BUFFER, 0)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vCounts)
+        GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
     }
 
     private fun generateTexCoor(bw: Int, bh: Int): FloatArray {

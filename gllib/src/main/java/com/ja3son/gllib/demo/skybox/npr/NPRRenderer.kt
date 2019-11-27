@@ -1,6 +1,6 @@
 package com.ja3son.gllib.demo.skybox.npr
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.controller.BaseRenderer
 import com.ja3son.gllib.util.MatrixState
 import javax.microedition.khronos.egl.EGLConfig
@@ -21,7 +21,7 @@ class NPRRenderer : BaseRenderer() {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
         for (entity in entities) {
             entity.xAngle = xAngle
             entity.yAngle = yAngle
@@ -30,10 +30,10 @@ class NPRRenderer : BaseRenderer() {
         MatrixState.pushMatrix()
         MatrixState.translate(0f, 0f, -20f)
 
-        GLES32.glFrontFace(GLES32.GL_CW)
+        GLES30.glFrontFace(GLES30.GL_CW)
         entities[1].drawSelf()
 
-        GLES32.glFrontFace(GLES32.GL_CCW)
+        GLES30.glFrontFace(GLES30.GL_CCW)
         entities[0].drawSelf()
         MatrixState.popMatrix()
     }

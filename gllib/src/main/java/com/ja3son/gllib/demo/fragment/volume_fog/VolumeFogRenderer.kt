@@ -1,6 +1,6 @@
 package com.ja3son.gllib.demo.fragment.volume_fog
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.R
 import com.ja3son.gllib.controller.BaseRenderer
 import com.ja3son.gllib.util.MatrixState
@@ -28,7 +28,7 @@ class VolumeFogRenderer : BaseRenderer() {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
         entities[0].xAngle = xAngle
         entities[0].yAngle = yAngle
 

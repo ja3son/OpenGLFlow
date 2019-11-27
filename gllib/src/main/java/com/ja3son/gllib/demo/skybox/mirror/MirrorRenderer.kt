@@ -1,6 +1,6 @@
 package com.ja3son.gllib.demo.skybox.mirror
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import android.view.MotionEvent
 import com.ja3son.gllib.R
 import com.ja3son.gllib.controller.BaseRenderer
@@ -18,7 +18,7 @@ class MirrorRenderer : BaseRenderer() {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
-        GLES32.glDisable(GLES32.GL_DEPTH_TEST)
+        GLES30.glDisable(GLES30.GL_DEPTH_TEST)
         texOneId = ShaderUtils.initTexture(R.drawable.basketball)
         texTwoId = ShaderUtils.initTexture(R.drawable.floor)
         texThreeId = ShaderUtils.initTexture(R.drawable.floor_transparent)
@@ -34,7 +34,7 @@ class MirrorRenderer : BaseRenderer() {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
         entities[0].xAngle = xAngle
         entities[0].yAngle = yAngle
 
@@ -46,15 +46,15 @@ class MirrorRenderer : BaseRenderer() {
         MatrixState.popMatrix()
 
         ballController.drawSelfMirror(texOneId)
-        GLES32.glEnable(GLES32.GL_BLEND)
-        GLES32.glBlendFunc(GLES32.GL_SRC_ALPHA, GLES32.GL_ONE_MINUS_SRC_ALPHA)
+        GLES30.glEnable(GLES30.GL_BLEND)
+        GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
 
         MatrixState.pushMatrix()
         MatrixState.translate(0f, Constant.FLOOR_Y, 0f)
         entities[0].drawSelf(texThreeId)
         MatrixState.popMatrix()
 
-        GLES32.glDisable(GLES32.GL_BLEND)
+        GLES30.glDisable(GLES30.GL_BLEND)
 
         ballController.drawSelf(texOneId)
 

@@ -1,7 +1,7 @@
 package com.ja3son.gllib.entity
 
+
 import android.opengl.GLES30
-import android.opengl.GLES32
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
 import java.nio.ByteBuffer
@@ -106,11 +106,11 @@ class BallEntity(val r: Float) : BaseEntity() {
     }
 
     override fun drawSelf() {
-        GLES32.glUseProgram(program)
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
-        GLES32.glUniform1f(uRHandler, r * UNIT_SIZE)
-        GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
-        GLES32.glEnableVertexAttribArray(aPosition)
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
+        GLES30.glUseProgram(program)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glUniform1f(uRHandler, r * UNIT_SIZE)
+        GLES30.glVertexAttribPointer(aPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
+        GLES30.glEnableVertexAttribArray(aPosition)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vCounts)
     }
 }

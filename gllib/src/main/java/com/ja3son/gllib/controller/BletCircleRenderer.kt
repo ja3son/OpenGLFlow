@@ -1,6 +1,6 @@
 package com.ja3son.gllib.controller
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.entity.BeltEntity
 import com.ja3son.gllib.entity.CircleEntity
 import com.ja3son.gllib.util.MatrixState
@@ -25,7 +25,7 @@ class BletCircleRenderer : BaseRenderer() {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
         MatrixState.pushMatrix()
 

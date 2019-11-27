@@ -1,6 +1,6 @@
 package com.ja3son.gllib.demo.fragment.volume_fog
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.entity.BaseEntity
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
@@ -80,55 +80,55 @@ class VolumeFogEntity(private val rows: Int, private val cols: Int,
     }
 
     override fun initShaderParams() {
-        aPosition = GLES32.glGetAttribLocation(program, "aPosition")
-        aTexCoor = GLES32.glGetAttribLocation(program, "aTexCoor")
-        uMVPMatrix = GLES32.glGetUniformLocation(program, "uMVPMatrix")
-        uMMatrix = GLES32.glGetUniformLocation(program, "uMMatrix")
+        aPosition = GLES30.glGetAttribLocation(program, "aPosition")
+        aTexCoor = GLES30.glGetAttribLocation(program, "aTexCoor")
+        uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
+        uMMatrix = GLES30.glGetUniformLocation(program, "uMMatrix")
 
-        uCameraLocation = GLES32.glGetUniformLocation(program, "uCamaraLocation")
-        slabY = GLES32.glGetUniformLocation(program, "slabY")
-        startAngle = GLES32.glGetUniformLocation(program, "startAngle")
+        uCameraLocation = GLES30.glGetUniformLocation(program, "uCamaraLocation")
+        slabY = GLES30.glGetUniformLocation(program, "slabY")
+        startAngle = GLES30.glGetUniformLocation(program, "startAngle")
 
-        sTextureGrass = GLES32.glGetUniformLocation(program, "sTextureGrass")
-        sTextureRock = GLES32.glGetUniformLocation(program, "sTextureRock")
-        landStartY = GLES32.glGetUniformLocation(program, "landStartY")
-        landYSpan = GLES32.glGetUniformLocation(program, "landYSpan")
+        sTextureGrass = GLES30.glGetUniformLocation(program, "sTextureGrass")
+        sTextureRock = GLES30.glGetUniformLocation(program, "sTextureRock")
+        landStartY = GLES30.glGetUniformLocation(program, "landStartY")
+        landYSpan = GLES30.glGetUniformLocation(program, "landYSpan")
     }
 
     override fun drawSelf() {
-        GLES32.glUseProgram(program)
+        GLES30.glUseProgram(program)
         MatrixState.setInitStack()
         MatrixState.translate(0f, 0f, 1f)
         MatrixState.rotate(yAngle, 0f, 1f, 0f)
         MatrixState.rotate(xAngle, 1f, 0f, 0f)
 
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
-        GLES32.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
-        GLES32.glUniform3fv(uCameraLocation, 1, MatrixState.cameraLocation, 0)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
+        GLES30.glUniform3fv(uCameraLocation, 1, MatrixState.cameraLocation, 0)
 
-        GLES32.glUniform1f(slabY, 8f)
-        GLES32.glUniform1f(startAngle, Math.toRadians(startAngleValue.toDouble()).toFloat())
+        GLES30.glUniform1f(slabY, 8f)
+        GLES30.glUniform1f(startAngle, Math.toRadians(startAngleValue.toDouble()).toFloat())
         startAngleValue = (startAngleValue + 3f) % 360.0f
 
 
         //绑定纹理
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE0)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, texArray[0])
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE1)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, texArray[1])
-        GLES32.glUniform1i(sTextureGrass, 0)
-        GLES32.glUniform1i(sTextureRock, 1)
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texArray[0])
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE1)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texArray[1])
+        GLES30.glUniform1i(sTextureGrass, 0)
+        GLES30.glUniform1i(sTextureRock, 1)
 
         //传送相应的x参数
-        GLES32.glUniform1f(landStartY, 0f)
-        GLES32.glUniform1f(landYSpan, 50f)
+        GLES30.glUniform1f(landStartY, 0f)
+        GLES30.glUniform1f(landYSpan, 50f)
 
-        GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
-        GLES32.glVertexAttribPointer(aTexCoor, texLen, GLES32.GL_FLOAT, false, texLen * FLOAT_SIZE, texCoorBuffer)
-        GLES32.glEnableVertexAttribArray(aPosition)
-        GLES32.glEnableVertexAttribArray(aTexCoor)
+        GLES30.glVertexAttribPointer(aPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
+        GLES30.glVertexAttribPointer(aTexCoor, texLen, GLES30.GL_FLOAT, false, texLen * FLOAT_SIZE, texCoorBuffer)
+        GLES30.glEnableVertexAttribArray(aPosition)
+        GLES30.glEnableVertexAttribArray(aTexCoor)
 
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vCounts)
     }
 
     private fun generateTexCoor(rows: Int, cols: Int): FloatArray {

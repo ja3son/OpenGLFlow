@@ -1,6 +1,6 @@
 package com.ja3son.gllib.demo.buffer.fbo
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.R
 import com.ja3son.gllib.controller.BaseRenderer
 import com.ja3son.gllib.entity.BaseEntity
@@ -18,32 +18,32 @@ class FBORenderer : BaseRenderer() {
 
     private fun initFBO(width: Int, height: Int) {
         val buffers = IntArray(1)
-        GLES32.glGenFramebuffers(1, buffers, 0)
+        GLES30.glGenFramebuffers(1, buffers, 0)
         frameBuffer = buffers[0]
-        GLES32.glBindFramebuffer(GLES32.GL_FRAMEBUFFER, frameBuffer)
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, frameBuffer)
 
-        GLES32.glGenRenderbuffers(1, buffers, 0)
+        GLES30.glGenRenderbuffers(1, buffers, 0)
         renderBuffer = buffers[0]
-        GLES32.glBindRenderbuffer(GLES32.GL_RENDERBUFFER, renderBuffer)
-        GLES32.glRenderbufferStorage(GLES32.GL_RENDERBUFFER, GLES32.GL_DEPTH_COMPONENT16, width, height)
+        GLES30.glBindRenderbuffer(GLES30.GL_RENDERBUFFER, renderBuffer)
+        GLES30.glRenderbufferStorage(GLES30.GL_RENDERBUFFER, GLES30.GL_DEPTH_COMPONENT16, width, height)
 
-        frameTextureId = ShaderUtils.genTexture(GLES32.GL_TEXTURE_2D, width, height)
-        GLES32.glFramebufferTexture2D(GLES32.GL_FRAMEBUFFER, GLES32.GL_COLOR_ATTACHMENT0, GLES32.GL_TEXTURE_2D, frameTextureId, 0)
-        GLES32.glFramebufferRenderbuffer(GLES32.GL_FRAMEBUFFER, GLES32.GL_DEPTH_ATTACHMENT, GLES32.GL_RENDERBUFFER, renderBuffer)
+        frameTextureId = ShaderUtils.genTexture(GLES30.GL_TEXTURE_2D, width, height)
+        GLES30.glFramebufferTexture2D(GLES30.GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, GLES30.GL_TEXTURE_2D, frameTextureId, 0)
+        GLES30.glFramebufferRenderbuffer(GLES30.GL_FRAMEBUFFER, GLES30.GL_DEPTH_ATTACHMENT, GLES30.GL_RENDERBUFFER, renderBuffer)
 
-        GLES32.glBindFramebuffer(GLES32.GL_FRAMEBUFFER, 0)
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0)
     }
 
     private fun drawFrame(width: Int, height: Int, entity: BaseEntity) {
-        GLES32.glViewport(0, 0, width, height)
-        GLES32.glBindFramebuffer(GLES32.GL_FRAMEBUFFER, frameBuffer)
-        GLES32.glClear(GLES32.GL_DEPTH_BUFFER_BIT or GLES32.GL_COLOR_BUFFER_BIT)
+        GLES30.glViewport(0, 0, width, height)
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, frameBuffer)
+        GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT or GLES30.GL_COLOR_BUFFER_BIT)
 
         MatrixState.pushMatrix()
         MatrixState.translate(0f, 0f, -100f)
         entity.drawSelf(textureId)
         MatrixState.popMatrix()
-        GLES32.glBindFramebuffer(GLES32.GL_FRAMEBUFFER, 0)
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0)
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
@@ -62,7 +62,7 @@ class FBORenderer : BaseRenderer() {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
         entities[0].xAngle = xAngle
         entities[0].yAngle = yAngle

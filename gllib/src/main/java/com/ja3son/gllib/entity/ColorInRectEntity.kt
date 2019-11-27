@@ -1,6 +1,6 @@
 package com.ja3son.gllib.entity
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
 import java.nio.ByteBuffer
@@ -44,13 +44,13 @@ class ColorInRectEntity(val unitSize: Float, val colorIn: FloatArray) : BaseEnti
 
     override fun initShaderParams() {
         super.initShaderParams()
-        uMMatrix = GLES32.glGetUniformLocation(program, "uMMatrix")
+        uMMatrix = GLES30.glGetUniformLocation(program, "uMMatrix")
     }
 
     override fun drawSelf() {
         super.drawSelf()
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
-        GLES32.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLE_FAN, 0, vCounts)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLE_FAN, 0, vCounts)
     }
 }

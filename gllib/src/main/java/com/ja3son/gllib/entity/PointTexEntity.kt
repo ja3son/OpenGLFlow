@@ -1,6 +1,6 @@
 package com.ja3son.gllib.entity
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
 import java.nio.ByteBuffer
@@ -42,21 +42,21 @@ class PointTexEntity(val textureId: Int) : BaseEntity() {
     }
 
     override fun initShaderParams() {
-        aPosition = GLES32.glGetAttribLocation(program, "aPosition")
-        uMVPMatrix = GLES32.glGetUniformLocation(program, "uMVPMatrix")
-        uPointSize = GLES32.glGetUniformLocation(program, "uPointSize")
+        aPosition = GLES30.glGetAttribLocation(program, "aPosition")
+        uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
+        uPointSize = GLES30.glGetUniformLocation(program, "uPointSize")
     }
 
     override fun drawSelf() {
-        GLES32.glUseProgram(program)
+        GLES30.glUseProgram(program)
         MatrixState.rotate(yAngle, 0f, 1f, 0f)
         MatrixState.rotate(xAngle, 1f, 0f, 0f)
-        GLES32.glUniform1f(uPointSize, 64.0f)
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
-        GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
-        GLES32.glEnableVertexAttribArray(aPosition)
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE0)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, textureId)
-        GLES32.glDrawArrays(GLES32.GL_POINTS, 0, vCounts)
+        GLES30.glUniform1f(uPointSize, 64.0f)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glVertexAttribPointer(aPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
+        GLES30.glEnableVertexAttribArray(aPosition)
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId)
+        GLES30.glDrawArrays(GLES30.GL_POINTS, 0, vCounts)
     }
 }

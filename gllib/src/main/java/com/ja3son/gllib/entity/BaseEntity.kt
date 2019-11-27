@@ -1,6 +1,6 @@
 package com.ja3son.gllib.entity
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import android.opengl.Matrix
 import com.ja3son.gllib.util.ShaderUtils
 import java.nio.ByteBuffer
@@ -26,6 +26,7 @@ abstract class BaseEntity {
 
     protected var modelMatrix: FloatArray = FloatArray(16)
     protected val posLen: Int = 3
+    protected val pos4Len: Int = 4
     protected val texLen: Int = 2
     protected val colorLen: Int = 4
     protected var vCounts: Int = 0
@@ -64,17 +65,20 @@ abstract class BaseEntity {
     }
 
     open fun initShaderParams() {
-        aPosition = GLES32.glGetAttribLocation(program, "aPosition")
-        aColor = GLES32.glGetAttribLocation(program, "aColor")
-        uMVPMatrix = GLES32.glGetUniformLocation(program, "uMVPMatrix")
+        aPosition = GLES30.glGetAttribLocation(program, "aPosition")
+        aColor = GLES30.glGetAttribLocation(program, "aColor")
+        uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
+
+        uCamera = GLES30.glGetUniformLocation(program, "uCamera")
+        uMMatrix = GLES30.glGetUniformLocation(program, "uMMatrix")
     }
 
     open fun drawSelf() {
-        GLES32.glUseProgram(program)
-        GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
-        GLES32.glVertexAttribPointer(aColor, colorLen, GLES32.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
-        GLES32.glEnableVertexAttribArray(aPosition)
-        GLES32.glEnableVertexAttribArray(aColor)
+        GLES30.glUseProgram(program)
+        GLES30.glVertexAttribPointer(aPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
+        GLES30.glVertexAttribPointer(aColor, colorLen, GLES30.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
+        GLES30.glEnableVertexAttribArray(aPosition)
+        GLES30.glEnableVertexAttribArray(aColor)
     }
 
     open fun drawSelf(textureId: Int) {

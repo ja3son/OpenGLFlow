@@ -1,6 +1,6 @@
 package com.ja3son.gllib.controller
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.entity.ColorInRectEntity
 import com.ja3son.gllib.util.MatrixState
 import javax.microedition.khronos.egl.EGLConfig
@@ -28,7 +28,7 @@ class ColorRectPolygonRenderer : BaseRenderer() {
     }
 
     override fun onDrawFrame(gl: GL10?) {
-        GLES32.glClear(GLES32.GL_COLOR_BUFFER_BIT or GLES32.GL_DEPTH_BUFFER_BIT)
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
         MatrixState.pushMatrix()
 
@@ -40,14 +40,14 @@ class ColorRectPolygonRenderer : BaseRenderer() {
         entities[0].drawSelf()
         MatrixState.popMatrix()
 
-        GLES32.glEnable(GLES32.GL_POLYGON_OFFSET_FILL)
-        GLES32.glPolygonOffset(polygonOffsetFactor, polygonOffsetUnits)
+        GLES30.glEnable(GLES30.GL_POLYGON_OFFSET_FILL)
+        GLES30.glPolygonOffset(polygonOffsetFactor, polygonOffsetUnits)
 
         MatrixState.pushMatrix()
         MatrixState.translate(250f, 0f, 0f)
         entities[1].drawSelf()
         MatrixState.popMatrix()
-        GLES32.glDisable(GLES32.GL_POLYGON_OFFSET_FILL)
+        GLES30.glDisable(GLES30.GL_POLYGON_OFFSET_FILL)
 
         MatrixState.popMatrix()
     }

@@ -1,6 +1,6 @@
 package com.ja3son.gllib.entity
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.util.Constants
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
@@ -48,32 +48,32 @@ class PointsOrLinesEntity : BaseEntity() {
     }
 
     override fun initShaderParams() {
-        aPosition = GLES32.glGetAttribLocation(program, "aPosition")
-        aColor = GLES32.glGetAttribLocation(program, "aColor")
-        uMVPMatrix = GLES32.glGetUniformLocation(program, "uMVPMatrix")
+        aPosition = GLES30.glGetAttribLocation(program, "aPosition")
+        aColor = GLES30.glGetAttribLocation(program, "aColor")
+        uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
     }
 
     override fun drawSelf() {
-        GLES32.glUseProgram(program)
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
-        GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
-        GLES32.glVertexAttribPointer(aColor, colorLen, GLES32.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
-        GLES32.glEnableVertexAttribArray(aPosition)
-        GLES32.glEnableVertexAttribArray(aColor)
-        GLES32.glLineWidth(10f)
+        GLES30.glUseProgram(program)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glVertexAttribPointer(aPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
+        GLES30.glVertexAttribPointer(aColor, colorLen, GLES30.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
+        GLES30.glEnableVertexAttribArray(aPosition)
+        GLES30.glEnableVertexAttribArray(aColor)
+        GLES30.glLineWidth(10f)
         Constants.curDrawState = Constants.DrawState.values()[touchIndex % Constants.DrawState.values().size]
         when (Constants.curDrawState) {
             Constants.DrawState.GL_POINTS -> {
-                GLES32.glDrawArrays(GLES32.GL_POINTS, 0, vCounts)
+                GLES30.glDrawArrays(GLES30.GL_POINTS, 0, vCounts)
             }
             Constants.DrawState.GL_LINES -> {
-                GLES32.glDrawArrays(GLES32.GL_LINES, 0, vCounts)
+                GLES30.glDrawArrays(GLES30.GL_LINES, 0, vCounts)
             }
             Constants.DrawState.GL_LINE_STRIP -> {
-                GLES32.glDrawArrays(GLES32.GL_LINE_STRIP, 0, vCounts)
+                GLES30.glDrawArrays(GLES30.GL_LINE_STRIP, 0, vCounts)
             }
             Constants.DrawState.GL_LINE_LOOP -> {
-                GLES32.glDrawArrays(GLES32.GL_LINE_LOOP, 0, vCounts)
+                GLES30.glDrawArrays(GLES30.GL_LINE_LOOP, 0, vCounts)
             }
         }
     }

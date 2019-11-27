@@ -1,7 +1,7 @@
 package com.ja3son.gllib.demo.texEarthMoon
 
+
 import android.opengl.GLES30
-import android.opengl.GLES32
 import com.ja3son.gllib.entity.BaseEntity
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
@@ -111,25 +111,25 @@ class MoonEntity(val r: Float, val texId: Int) : BaseEntity() {
         MatrixState.rotate(xAngle, 1f, 0f, 0f)
         MatrixState.rotate(yAngle, 0f, 1f, 0f)
 
-        GLES32.glUseProgram(program)
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glUseProgram(program)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
         GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
 
         GLES30.glUniform3fv(uLightLocationSun, 1, MatrixState.lightPositionFB)
         GLES30.glUniform3fv(uCamera, 1, MatrixState.cameraFB)
 
-        GLES32.glVertexAttribPointer(aPosition, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
-        GLES32.glVertexAttribPointer(aTexCoor, posLen, GLES32.GL_FLOAT, false, texLen * FLOAT_SIZE, texCoorBuffer)
+        GLES30.glVertexAttribPointer(aPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
+        GLES30.glVertexAttribPointer(aTexCoor, posLen, GLES30.GL_FLOAT, false, texLen * FLOAT_SIZE, texCoorBuffer)
         GLES30.glVertexAttribPointer(aNormal, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
-        GLES32.glEnableVertexAttribArray(aPosition)
-        GLES32.glEnableVertexAttribArray(aTexCoor)
-        GLES32.glEnableVertexAttribArray(aNormal)
+        GLES30.glEnableVertexAttribArray(aPosition)
+        GLES30.glEnableVertexAttribArray(aTexCoor)
+        GLES30.glEnableVertexAttribArray(aNormal)
 
-        GLES32.glActiveTexture(GLES32.GL_TEXTURE0)
-        GLES32.glBindTexture(GLES32.GL_TEXTURE_2D, texId)
-        GLES32.glUniform1i(sTexture, 0)
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId)
+        GLES30.glUniform1i(sTexture, 0)
 
-        GLES32.glDrawArrays(GLES32.GL_TRIANGLES, 0, vCounts)
+        GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vCounts)
     }
 
     fun generateTexCoor(bw: Int, bh: Int): FloatArray {

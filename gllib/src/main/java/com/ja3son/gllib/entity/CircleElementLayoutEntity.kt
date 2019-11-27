@@ -1,6 +1,6 @@
 package com.ja3son.gllib.entity
 
-import android.opengl.GLES32
+import android.opengl.GLES30
 import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
 import java.nio.ByteBuffer
@@ -71,18 +71,18 @@ class CircleElementLayoutEntity : BaseEntity() {
     }
 
     override fun initShaderParams() {
-        GLES32.glBindAttribLocation(program, 0, "aPosition")
-        GLES32.glBindAttribLocation(program, 1, "aColor")
-        uMVPMatrix = GLES32.glGetUniformLocation(program, "uMVPMatrix")
+        GLES30.glBindAttribLocation(program, 0, "aPosition")
+        GLES30.glBindAttribLocation(program, 1, "aColor")
+        uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
     }
 
     override fun drawSelf() {
-        GLES32.glUseProgram(program)
-        GLES32.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
-        GLES32.glVertexAttribPointer(0, posLen, GLES32.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
-        GLES32.glVertexAttribPointer(1, colorLen, GLES32.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
-        GLES32.glEnableVertexAttribArray(0)
-        GLES32.glEnableVertexAttribArray(1)
-        GLES32.glDrawElements(GLES32.GL_TRIANGLES, iCounts, GLES32.GL_UNSIGNED_BYTE, indicesBuffer)
+        GLES30.glUseProgram(program)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glVertexAttribPointer(0, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)
+        GLES30.glVertexAttribPointer(1, colorLen, GLES30.GL_FLOAT, false, colorLen * FLOAT_SIZE, colorsBuffer)
+        GLES30.glEnableVertexAttribArray(0)
+        GLES30.glEnableVertexAttribArray(1)
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES, iCounts, GLES30.GL_UNSIGNED_BYTE, indicesBuffer)
     }
 }
