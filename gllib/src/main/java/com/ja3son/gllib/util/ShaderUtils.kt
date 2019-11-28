@@ -147,6 +147,28 @@ object ShaderUtils {
         return textureId
     }
 
+    fun initCubmapTexture(drawables: IntArray): Int {
+        val textures = IntArray(1)
+        GLES30.glGenTextures(1, textures, 0)
+        val textureId = textures[0]
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_CUBE_MAP, textureId)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_CUBE_MAP, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_CUBE_MAP, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_CUBE_MAP, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
+        GLES30.glTexParameteri(GLES30.GL_TEXTURE_CUBE_MAP, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
+
+        drawables.forEachIndexed { index, drawable ->
+            run {
+                val bitmap = BitmapFactory.decodeResource(res, drawable)
+                GLUtils.texImage2D(GLES30.GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, 0, bitmap, 0)
+                bitmap.recycle()
+            }
+        }
+
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0)
+        return textureId
+    }
+
     fun initMipMapTexture(drawable: Int): Int {
         val textures = IntArray(1)
         GLES30.glGenTextures(1, textures, 0)

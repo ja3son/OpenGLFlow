@@ -2,6 +2,7 @@ package com.ja3son.gllib.entity
 
 import android.opengl.GLES30
 import android.opengl.Matrix
+import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
@@ -66,11 +67,14 @@ abstract class BaseEntity {
 
     open fun initShaderParams() {
         aPosition = GLES30.glGetAttribLocation(program, "aPosition")
+        aNormal = GLES30.glGetAttribLocation(program, "aNormal")
+        aTexCoor = GLES30.glGetAttribLocation(program, "aTexCoor")
         aColor = GLES30.glGetAttribLocation(program, "aColor")
-        uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
 
+        uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
         uCamera = GLES30.glGetUniformLocation(program, "uCamera")
         uMMatrix = GLES30.glGetUniformLocation(program, "uMMatrix")
+        uLightLocation = GLES30.glGetUniformLocation(program, "uLightLocation")
     }
 
     open fun drawSelf() {
@@ -82,6 +86,12 @@ abstract class BaseEntity {
     }
 
     open fun drawSelf(textureId: Int) {
-        drawSelf()
+        MatrixState.rotate(xAngle, 1f, 0f, 0f)
+        MatrixState.rotate(yAngle, 0f, 1f, 0f)
+
+        GLES30.glUseProgram(program)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
+        GLES30.glUniform3fv(uCamera, 1, MatrixState.cameraFB)
     }
 }
