@@ -22,14 +22,18 @@ class ObjVertexNAvgEntity(private val fName: String) : BaseEntity() {
         val vertices = OBJUtils.vXYZ
         val normals = OBJUtils.nXYZ
 
-        vCounts = vertices.size / 3
-        verticesBuffer = ByteBuffer.allocateDirect(vertices.size * FLOAT_SIZE)
-                .order(ByteOrder.nativeOrder()).asFloatBuffer()
-                .put(vertices).position(0) as FloatBuffer
+        if (vertices != null) {
+            vCounts = vertices.size / 3
+            verticesBuffer = ByteBuffer.allocateDirect(vertices.size * FLOAT_SIZE)
+                    .order(ByteOrder.nativeOrder()).asFloatBuffer()
+                    .put(vertices).position(0) as FloatBuffer
+        }
 
-        normalBuffer = ByteBuffer.allocateDirect(normals.size * FLOAT_SIZE)
-                .order(ByteOrder.nativeOrder()).asFloatBuffer()
-                .put(normals).position(0) as FloatBuffer
+        if (normals != null) {
+            normalBuffer = ByteBuffer.allocateDirect(normals.size * FLOAT_SIZE)
+                    .order(ByteOrder.nativeOrder()).asFloatBuffer()
+                    .put(normals).position(0) as FloatBuffer
+        }
     }
 
     override fun initShader() {

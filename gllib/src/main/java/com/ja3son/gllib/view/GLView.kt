@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import com.ja3son.gllib.controller.BaseRenderer
-import com.ja3son.gllib.demo.light.refraction.RefractionRenderer
+import com.ja3son.gllib.demo.light.deviation.DeviationRenderer
 import com.ja3son.gllib.util.MatrixState
 
 class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(context, attrs) {
@@ -15,7 +15,7 @@ class GLView(context: Context, attrs: AttributeSet? = null) : GLSurfaceView(cont
     init {
         setEGLContextClientVersion(3)
         setEGLConfigChooser(8, 8, 8, 8, 16, 8)
-        renderer = RefractionRenderer()
+        renderer = DeviationRenderer()
         setLightOffset(20f)
         setRenderer(renderer)
         renderMode = RENDERMODE_CONTINUOUSLY

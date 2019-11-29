@@ -80,7 +80,7 @@ class CircleRangeElementEntity : BaseEntity() {
     override fun drawSelf() {
     }
 
-    fun drawSelf(start: Int, count: Int) {
+    override fun drawSelf(start: Int, count: Int) {
         GLES30.glUseProgram(program)
         GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
         GLES30.glVertexAttribPointer(aPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, verticesBuffer)

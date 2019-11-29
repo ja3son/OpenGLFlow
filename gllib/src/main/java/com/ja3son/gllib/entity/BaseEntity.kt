@@ -38,6 +38,7 @@ abstract class BaseEntity {
 
     protected lateinit var verticesBuffer: FloatBuffer
     protected lateinit var texCoorBuffer: FloatBuffer
+    protected lateinit var noiseCoorBuffer: FloatBuffer
     protected lateinit var normalBuffer: FloatBuffer
     protected lateinit var indicesBuffer: ByteBuffer
     protected lateinit var colorsBuffer: FloatBuffer
@@ -86,6 +87,16 @@ abstract class BaseEntity {
     }
 
     open fun drawSelf(textureId: Int) {
+        MatrixState.rotate(xAngle, 1f, 0f, 0f)
+        MatrixState.rotate(yAngle, 0f, 1f, 0f)
+
+        GLES30.glUseProgram(program)
+        GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
+        GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
+        GLES30.glUniform3fv(uCamera, 1, MatrixState.cameraFB)
+    }
+
+    open fun drawSelf(textureBG: Int, textureNormal: Int) {
         MatrixState.rotate(xAngle, 1f, 0f, 0f)
         MatrixState.rotate(yAngle, 0f, 1f, 0f)
 
