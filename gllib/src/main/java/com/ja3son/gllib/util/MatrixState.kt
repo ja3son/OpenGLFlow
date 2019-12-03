@@ -8,6 +8,7 @@ import java.nio.FloatBuffer
 object MatrixState {
     private val projMatrix = FloatArray(16)
     private val viewMatrix = FloatArray(16)
+    private var viewProjMatrix = FloatArray(16)
     private var mvpMatrix = FloatArray(16)
     private val stack = Array(10) { FloatArray(16) }
     private lateinit var currentMatrix: FloatArray
@@ -130,6 +131,11 @@ object MatrixState {
         Matrix.multiplyMM(mvpMatrix, 0, viewMatrix, 0, currentMatrix, 0)
         Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, mvpMatrix, 0)
         return mvpMatrix
+    }
+
+    fun getViewProjMatrix(): FloatArray {
+        Matrix.multiplyMM(viewProjMatrix, 0, projMatrix, 0, viewMatrix, 0)
+        return viewProjMatrix
     }
 
     fun getModelMatrix(): FloatArray {

@@ -19,6 +19,7 @@ abstract class BaseEntity {
 
     protected var uRHandler: Int = 0
     protected var uMMatrix: Int = 0
+    protected var uViewProjatrix: Int = 0
     protected var aNormal: Int = 0
     protected var uLightDirection: Int = 0
     protected var uLightLocation: Int = 0
@@ -75,6 +76,7 @@ abstract class BaseEntity {
         uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
         uCamera = GLES30.glGetUniformLocation(program, "uCamera")
         uMMatrix = GLES30.glGetUniformLocation(program, "uMMatrix")
+        uViewProjatrix = GLES30.glGetUniformLocation(program, "uViewProjatrix")
         uLightLocation = GLES30.glGetUniformLocation(program, "uLightLocation")
     }
 
@@ -93,6 +95,7 @@ abstract class BaseEntity {
         GLES30.glUseProgram(program)
         GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
         GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
+        GLES30.glUniformMatrix4fv(uViewProjatrix, 1, false, MatrixState.getViewProjMatrix(), 0)
         GLES30.glUniform3fv(uCamera, 1, MatrixState.cameraFB)
     }
 
