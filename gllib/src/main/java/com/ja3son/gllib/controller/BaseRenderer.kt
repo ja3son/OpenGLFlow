@@ -7,6 +7,8 @@ import com.ja3son.gllib.entity.BaseEntity
 import com.ja3son.gllib.util.MatrixState
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
+import kotlin.math.cos
+import kotlin.math.sin
 
 open class BaseRenderer : GLSurfaceView.Renderer {
     lateinit var entities: MutableList<BaseEntity>
@@ -15,6 +17,9 @@ open class BaseRenderer : GLSurfaceView.Renderer {
     var height = 0
     var yAngle = 0f
     var xAngle = 0f
+    var camera_x = 0f
+    var camera_z = 50f
+    var camera_y = 20f
     var touchIndex = 0
     private var mPreviousY: Float = 0f
     private var mPreviousX: Float = 0f
@@ -54,6 +59,10 @@ open class BaseRenderer : GLSurfaceView.Renderer {
                 val dx = x - mPreviousX
                 yAngle += dx * TOUCH_SCALE_FACTOR
                 xAngle += dy * TOUCH_SCALE_FACTOR
+
+                camera_x = sin(Math.toRadians(yAngle.toDouble())).toFloat() * 50
+                camera_z = cos(Math.toRadians(yAngle.toDouble())).toFloat() * 50
+                camera_y += dy / 10.0f
             }
         }
         mPreviousY = y

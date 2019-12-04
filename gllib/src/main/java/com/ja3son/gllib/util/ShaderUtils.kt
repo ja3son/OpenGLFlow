@@ -129,6 +129,20 @@ object ShaderUtils {
         return textureId
     }
 
+    fun genDepthTexture(target: Int, width: Int, height: Int): Int {
+        val textures = IntArray(1)
+        GLES30.glGenTextures(1, textures, 0)
+        val textureId = textures[0]
+        GLES30.glBindTexture(target, textureId)
+        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
+        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
+        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE)
+        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE)
+        GLES30.glTexImage2D(target, 0, GLES30.GL_R16F, width, height, 0, GLES30.GL_RED, GLES30.GL_FLOAT, null)
+        GLES30.glBindTexture(target, 0)
+        return textureId
+    }
+
     fun initTexture(drawable: Int): Int {
         val textures = IntArray(1)
         GLES30.glGenTextures(1, textures, 0)
@@ -494,16 +508,16 @@ object ShaderUtils {
 
             do {
                 temp = br.readLine()
-                if (temp != null && temp != "") {
+                if (temp.isNotEmpty() && !temp.startsWith("#")) {
                     val temps = temp.split("[ ]+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     if (temps[0].trim { it <= ' ' } == "v") {
                         alv.add(temps[1].toFloat())
                         alv.add(temps[2].toFloat())
                         alv.add(temps[3].toFloat())
-                    } else if (temps[0].trim() == "vt") {
+                    } else if (temps[0].trim { it <= ' ' } == "vt") {
                         alt.add(temps[1].toFloat())
                         alt.add(1 - temps[2].toFloat())
-                    } else if (temps[0].trim().equals("vn")) {
+                    } else if (temps[0].trim { it <= ' ' } == "vn") {
                         aln.add(temps[1].toFloat())
                         aln.add(temps[2].toFloat())
                         aln.add(temps[3].toFloat())

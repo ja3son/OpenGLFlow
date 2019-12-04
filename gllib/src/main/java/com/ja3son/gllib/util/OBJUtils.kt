@@ -46,8 +46,8 @@ object OBJUtils {
 
             do {
                 temps = br.readLine()
-                if (temps != null && temps != "") {
-                    val tempsa = temps!!.split("[ ]+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                if (temps != null && temps.isNotEmpty() && !temps.startsWith("#")) {
+                    val tempsa = temps.split("[ ]+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     if (tempsa[0].trim { it <= ' ' } == "v") {
                         alv.add(java.lang.Float.parseFloat(tempsa[1]))
                         alv.add(java.lang.Float.parseFloat(tempsa[2]))
@@ -139,7 +139,7 @@ object OBJUtils {
 
             do {
                 temps = br.readLine()
-                if (temps != null && temps != "") {
+                if (temps != null && temps.isNotEmpty() && !temps.startsWith("#")) {
                     val tempsa = temps!!.split("[ ]+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     if (tempsa[0].trim { it <= ' ' } == "v") {
                         alv.add(java.lang.Float.parseFloat(tempsa[1]))
