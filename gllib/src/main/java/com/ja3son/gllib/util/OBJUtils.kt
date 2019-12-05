@@ -127,6 +127,98 @@ object OBJUtils {
     }
 
 
+    fun loadFromFileVertexOnly(fname: String) {
+        val alv = ArrayList<Float>()
+        val alFaceIndex = ArrayList<Int>()
+        val alvResult = ArrayList<Float>()
+
+        val hmn = HashMap<Int, HashSet<Normal>>()
+        try {
+            val inputStream = res.assets.open(fname)
+            val isr = InputStreamReader(inputStream)
+            val br = BufferedReader(isr)
+            var temps: String?
+
+            while (br.readLine().also { temps = it } != null) {
+                if (temps!!.isNotEmpty() && !temps!!.startsWith("#")) {
+                    val tempsa = temps!!.split("[ ]+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    if (tempsa[0].trim { it <= ' ' } == "v") {
+                        alv.add(tempsa[1].toFloat())
+                        alv.add(tempsa[2].toFloat())
+                        alv.add(tempsa[3].toFloat())
+                    } else if (tempsa[0].trim { it <= ' ' } == "f") {
+                        val index = IntArray(3)
+                        index[0] = tempsa[1].split("/").toTypedArray()[0].toInt() - 1
+                        val x0 = alv[3 * index[0]]
+                        val y0 = alv[3 * index[0] + 1]
+                        val z0 = alv[3 * index[0] + 2]
+                        alvResult.add(x0)
+                        alvResult.add(y0)
+                        alvResult.add(z0)
+
+                        index[1] = tempsa[2].split("/").toTypedArray()[0].toInt() - 1
+                        val x1 = alv[3 * index[1]]
+                        val y1 = alv[3 * index[1] + 1]
+                        val z1 = alv[3 * index[1] + 2]
+                        alvResult.add(x1)
+                        alvResult.add(y1)
+                        alvResult.add(z1)
+
+                        index[2] = tempsa[3].split("/").toTypedArray()[0].toInt() - 1
+                        val x2 = alv[3 * index[2]]
+                        val y2 = alv[3 * index[2] + 1]
+                        val z2 = alv[3 * index[2] + 2]
+                        alvResult.add(x2)
+                        alvResult.add(y2)
+                        alvResult.add(z2)
+
+                        alFaceIndex.add(index[0])
+                        alFaceIndex.add(index[1])
+                        alFaceIndex.add(index[2])
+
+                        val vxa = x1 - x0
+                        val vya = y1 - y0
+                        val vza = z1 - z0
+
+                        val vxb = x2 - x0
+                        val vyb = y2 - y0
+                        val vzb = z2 - z0
+
+                        val vNormal = getCrossProduct(
+                                vxa, vya, vza, vxb, vyb, vzb
+                        )
+                        for (tempInxex in index) {
+                            var hsn = hmn[tempInxex]
+                            if (hsn == null) {
+                                hsn = HashSet()
+                            }
+                            hsn.add(Normal(vNormal[0], vNormal[1], vNormal[2]))
+                            hmn[tempInxex] = hsn
+                        }
+                    }
+                }
+            }
+
+            val size: Int = alvResult.size
+            vXYZ = FloatArray(size)
+            for (i in 0 until size) {
+                vXYZ!![i] = alvResult[i]
+            }
+
+            nXYZ = FloatArray(alFaceIndex.size * 3)
+            var c = 0
+            for (i in alFaceIndex) {
+                val hsn = hmn[i]
+                val tn = Normal.getAverage(hsn!!)
+                nXYZ!![c++] = tn[0]
+                nXYZ!![c++] = tn[1]
+                nXYZ!![c++] = tn[2]
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
     fun loadVertexOnlyFace(fname: String) {
         val alv = ArrayList<Float>()
         val alvResult = ArrayList<Float>()
