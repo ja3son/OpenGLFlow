@@ -76,7 +76,7 @@ abstract class BaseEntity {
         uMVPMatrix = GLES30.glGetUniformLocation(program, "uMVPMatrix")
         uCamera = GLES30.glGetUniformLocation(program, "uCamera")
         uMMatrix = GLES30.glGetUniformLocation(program, "uMMatrix")
-        uViewProjatrix = GLES30.glGetUniformLocation(program, "uViewProjatrix")
+        uViewProjatrix = GLES30.glGetUniformLocation(program, "uViewProjMatrix")
         uLightLocation = GLES30.glGetUniformLocation(program, "uLightLocation")
     }
 

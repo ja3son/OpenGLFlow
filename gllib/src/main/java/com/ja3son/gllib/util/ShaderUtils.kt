@@ -508,7 +508,7 @@ object ShaderUtils {
 
             do {
                 temp = br.readLine()
-                if (temp.isNotEmpty() && !temp.startsWith("#")) {
+                if (temp != null && temp.isNotEmpty() && !temp.startsWith("#")) {
                     val temps = temp.split("[ ]+".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     if (temps[0].trim { it <= ' ' } == "v") {
                         alv.add(temps[1].toFloat())

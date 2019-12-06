@@ -105,7 +105,7 @@ class ShadowMapRenderer : BaseRenderer() {
         GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0)
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT or GLES30.GL_DEPTH_BUFFER_BIT)
 
-        MatrixState.setCamera(camera_x, camera_y, camera_z, 0f, 0f, 0f, 0f, 1f, 0f)
+        MatrixState.setCamera(trans_x, trans_y, trans_z, 0f, 0f, 0f, 0f, 1f, 0f)
         MatrixState.setProjectFrustum(-ratio, ratio, -1.0f, 1.0f, 2f, 1000f)
 
         (entities[0] as ShadowMapEntity).drawSelf(frameTextureId, viewProjMatrix)

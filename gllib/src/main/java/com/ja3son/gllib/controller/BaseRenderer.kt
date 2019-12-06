@@ -17,9 +17,9 @@ open class BaseRenderer : GLSurfaceView.Renderer {
     var height = 0
     var yAngle = 0f
     var xAngle = 0f
-    var camera_x = 0f
-    var camera_z = 50f
-    var camera_y = 20f
+    var trans_x = 0f
+    var trans_z = 50f
+    var trans_y = 20f
     var touchIndex = 0
     private var mPreviousY: Float = 0f
     private var mPreviousX: Float = 0f
@@ -60,9 +60,9 @@ open class BaseRenderer : GLSurfaceView.Renderer {
                 yAngle += dx * TOUCH_SCALE_FACTOR
                 xAngle += dy * TOUCH_SCALE_FACTOR
 
-                camera_x = sin(Math.toRadians(yAngle.toDouble())).toFloat() * 50
-                camera_z = cos(Math.toRadians(yAngle.toDouble())).toFloat() * 50
-                camera_y += dy / 10.0f
+                trans_x = sin(Math.toRadians(yAngle.toDouble())).toFloat() * 50
+                trans_z = cos(Math.toRadians(yAngle.toDouble())).toFloat() * 50
+                trans_y += dy / 10.0f
             }
         }
         mPreviousY = y
