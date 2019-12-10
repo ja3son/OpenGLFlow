@@ -16,9 +16,9 @@ class AABBRenderer : BaseRenderer() {
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
         entities.add(ObjEntity("basic_physics/ch.obj"))
-        aList.add(RigidBody(entities[0], true, Vector3f(-13f, 0f, 0f), Vector3f(0f, 0f, 0f)))
-        aList.add(RigidBody(entities[0], true, Vector3f(13f, 0f, 0f), Vector3f(0f, 0f, 0f)))
-        aList.add(RigidBody(entities[0], false, Vector3f(0f, 0f, 0f), Vector3f(0.1f, 0f, 0f)))
+        aList.add(RigidBody(entities[0], true, Vector3f(-13f, 0f, 0f), Vector3f(0f, 0f, 0f), Orientation(45f, 0f, 0f, 1f)))
+        aList.add(RigidBody(entities[0], true, Vector3f(13f, 0f, 0f), Vector3f(0f, 0f, 0f), Orientation(45f, 0f, 0f, 1f)))
+        aList.add(RigidBody(entities[0], false, Vector3f(0f, 0f, 0f), Vector3f(0.1f, 0f, 0f), Orientation(0f, 0f, 1f, 0f)))
 
         textureId = ShaderUtils.initTexture(R.drawable.qhc)
 

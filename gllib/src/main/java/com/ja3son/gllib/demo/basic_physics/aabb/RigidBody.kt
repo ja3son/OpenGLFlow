@@ -11,17 +11,22 @@ class RigidBody() {
     private lateinit var currV: Vector3f
     private val V_UNIT = 0.02f
 
-    constructor(renderObject: BaseEntity, isStatic: Boolean, currLocation: Vector3f, currV: Vector3f) : this() {
+    private lateinit var currOrientation: Orientation
+
+    constructor(renderObject: BaseEntity, isStatic: Boolean, currLocation: Vector3f, currV: Vector3f, currOrientation: Orientation) : this() {
         this.renderObject = renderObject
         collObject = AABBEntity(renderObject.vertices_data)
         this.isStatic = isStatic
         this.currLocation = currLocation
         this.currV = currV
+
+        this.currOrientation = currOrientation
     }
 
     fun drawSelf() {
         MatrixState.pushMatrix()
         MatrixState.translate(currLocation.x, currLocation.y, currLocation.z)
+        MatrixState.insertSelfMatrix(currOrientation.orientationData)
         renderObject.drawSelf()
         MatrixState.popMatrix()
     }
@@ -41,8 +46,8 @@ class RigidBody() {
 
     private fun check(ra: RigidBody, rb: RigidBody): Boolean {
         val over = calOverTotal(
-                ra.collObject.getCurrAABBBox(ra.currLocation),
-                rb.collObject.getCurrAABBBox(rb.currLocation)
+                ra.collObject.getCurrAABBBox(ra.currLocation, ra.currOrientation),
+                rb.collObject.getCurrAABBBox(rb.currLocation, ra.currOrientation)
         )
         return over[0] > V_UNIT && over[1] > V_UNIT && over[2] > V_UNIT
     }

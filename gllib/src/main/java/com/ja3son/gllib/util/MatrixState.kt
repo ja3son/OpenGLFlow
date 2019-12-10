@@ -167,4 +167,10 @@ object MatrixState {
         lightDirectionFB?.put(lightDirection)
         lightDirectionFB?.position(0)
     }
+
+    fun insertSelfMatrix(matrixTemp: FloatArray?) {
+        val result = FloatArray(16)
+        Matrix.multiplyMM(result, 0, currentMatrix, 0, matrixTemp, 0)
+        currentMatrix = result
+    }
 }
