@@ -2,6 +2,7 @@ package com.ja3son.gllib.demo.light.motion_blur
 
 import android.opengl.GLES30
 import com.ja3son.gllib.entity.BaseEntity
+import com.ja3son.gllib.util.MatrixState
 import com.ja3son.gllib.util.ShaderUtils
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -63,13 +64,14 @@ class MotionBlurEntity(private val fName: String) : BaseEntity() {
 
     override fun initShader() {
         program = ShaderUtils.createProgram(
-                ShaderUtils.loadFromAssetsFile("reflection_vertex.glsl"),
-                ShaderUtils.loadFromAssetsFile("reflection_fragment.glsl")
+                ShaderUtils.loadFromAssetsFile("motion_blur/vertex.glsl"),
+                ShaderUtils.loadFromAssetsFile("motion_blur/frag.glsl")
         )
     }
 
     override fun drawSelf(textureId: Int) {
         super.drawSelf(textureId)
+        GLES30.glUniform3fv(uLightLocation, 1, MatrixState.lightPositionFB)
 
         GLES30.glEnableVertexAttribArray(aPosition)
         GLES30.glEnableVertexAttribArray(aNormal)
@@ -87,7 +89,7 @@ class MotionBlurEntity(private val fName: String) : BaseEntity() {
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, 0)
 
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_CUBE_MAP, textureId)
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId)
 
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vCounts)
 

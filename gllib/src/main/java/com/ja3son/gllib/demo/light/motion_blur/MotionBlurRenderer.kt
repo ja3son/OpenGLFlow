@@ -31,11 +31,7 @@ class MotionBlurRenderer : BaseRenderer() {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         super.onSurfaceCreated(gl, config)
-        textureId = ShaderUtils.initCubmapTexture(intArrayOf(
-                R.drawable.skycubemap_right, R.drawable.skycubemap_left,
-                R.drawable.skycubemap_up_cube, R.drawable.skycubemap_down,
-                R.drawable.skycubemap_front, R.drawable.skycubemap_back
-        ))
+        textureId = ShaderUtils.initTexture(R.drawable.ch_bg)
 
         initFBO(SHADOW_TEX_WIDTH, SHADOW_TEX_WIDTH)
 
@@ -86,7 +82,7 @@ class MotionBlurRenderer : BaseRenderer() {
         MatrixState.setCamera(0f, 0f, 3f, 0f, 0f, 0f, 0f, 1f, 0f)
 
         MatrixState.pushMatrix()
-        (entities[0] as MotionBlurRectEntity).drawSelf(frameTextureId, frameDepthTextureId, viewProjMatrix, invertViewProjMatrix, 2)
+        (entities[0] as MotionBlurRectEntity).drawSelf(frameTextureId, frameDepthTextureId, viewProjMatrix, invertViewProjMatrix, 20)
         MatrixState.popMatrix()
     }
 
@@ -101,7 +97,7 @@ class MotionBlurRenderer : BaseRenderer() {
         Matrix.invertM(invertViewProjMatrix, 0, MatrixState.getViewProjMatrix(), 0)
 
         MatrixState.pushMatrix()
-        MatrixState.translate(100f, 0f, -100f)
+        MatrixState.translate(100f, 0f, -50f)
         entities[1].drawSelf(textureId)
         MatrixState.popMatrix()
     }
