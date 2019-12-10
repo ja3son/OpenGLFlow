@@ -38,6 +38,8 @@ abstract class BaseEntity {
     var xAngle = 0f
     var touchIndex = 0
 
+    lateinit var vertices_data: FloatArray
+
     protected lateinit var verticesBuffer: FloatBuffer
     protected lateinit var texCoorBuffer: FloatBuffer
     protected lateinit var noiseCoorBuffer: FloatBuffer
