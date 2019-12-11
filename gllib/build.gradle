@@ -33,6 +33,7 @@ dependencies {
     implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
 
     implementation project(':cgl')
+    implementation 'cz.advel.jbullet:jbullet:20101010-1'
 }
 
 repositories {
