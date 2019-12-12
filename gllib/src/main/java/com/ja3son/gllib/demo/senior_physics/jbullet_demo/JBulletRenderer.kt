@@ -49,22 +49,24 @@ class JBulletRenderer : BaseRenderer() {
                 0f,
                 1f,
                 0f)
-        entities.add(JBulletFloorEntity(80 * Constant.UNIT_SIZE, -Constant.UNIT_SIZE, plane_shape, dynamics_world))
+//        entities.add(JBulletFloorEntity(80 * Constant.UNIT_SIZE, -Constant.UNIT_SIZE, plane_shape, dynamics_world))
+        entities.add(JBulletLandFloorEntity(0.5f, -.6f, dynamics_world))
+
         val size = 2
-        val xStart = (-size / 2.0f + 0.5f) * (2 + 0.4f) * Constant.UNIT_SIZE
-        val yStart = 0.02f
-        val zStart = (-size / 2.0f + 0.5f) * (2 + 0.4f) * Constant.UNIT_SIZE - 4f
+        val xStart = (-size / 2.0f + 0.5f) * (2 + 0.4f) * Constant.GT_UNIT_SIZE
+        val yStart = 1.52f
+        val zStart = (-size / 2.0f + 0.5f) * (2 + 0.4f) * Constant.GT_UNIT_SIZE - 4f
         for (i in 0 until size) {
             for (j in 0 until size) {
                 for (k in 0 until size) {
                     val tcTemp = JBulletCubeEntity(
-                            Constant.UNIT_SIZE,
+                            Constant.GT_UNIT_SIZE,
                             box_shape,
                             dynamics_world,
                             1f,
-                            xStart + i * (2 + 0.4f) * Constant.UNIT_SIZE,
-                            yStart + j * 2.02f * Constant.UNIT_SIZE,
-                            zStart + k * (2 + 0.4f) * Constant.UNIT_SIZE
+                            xStart + i * (2 + 0.4f) * Constant.GT_UNIT_SIZE,
+                            yStart + j * 2.02f * Constant.GT_UNIT_SIZE,
+                            zStart + k * (2 + 0.4f) * Constant.GT_UNIT_SIZE
                     )
                     tca.add(tcTemp)
                     tcTemp.body.forceActivationState(RigidBody.WANTS_DEACTIVATION)

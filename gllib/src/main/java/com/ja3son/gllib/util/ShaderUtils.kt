@@ -748,7 +748,7 @@ object ShaderUtils {
 
     fun loadLandForms(index: Int): Array<FloatArray> {
         val LAND_HIGH_ADJUST = 2f
-        val LAND_HIGHEST = 60f
+        val LAND_HIGHEST = 1.5f
         val bt = BitmapFactory.decodeResource(res, index)
         val colsPlusOne = bt.width
         val rowsPlusOne = bt.height
@@ -760,7 +760,7 @@ object ShaderUtils {
                 val g = Color.green(color)
                 val b = Color.blue(color)
                 val h = (r + g + b) / 3
-                result[i][j] = h * LAND_HIGHEST / 255 - LAND_HIGH_ADJUST
+                result[i][j] = h * LAND_HIGHEST / 255
             }
         }
         return result
