@@ -7,4 +7,4 @@ void main()
 {  
   //给此片元颜色值
   fragColor =  texture(sTexture, vTextureCoord); 
-}       
+}
