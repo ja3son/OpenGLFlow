@@ -173,4 +173,10 @@ object MatrixState {
         Matrix.multiplyMM(result, 0, currentMatrix, 0, matrixTemp, 0)
         currentMatrix = result
     }
+
+    fun setMatrix(value: FloatArray?) {
+        val temp = FloatArray(16)
+        Matrix.multiplyMM(temp, 0, currentMatrix, 0, value, 0)
+        currentMatrix = temp
+    }
 }
