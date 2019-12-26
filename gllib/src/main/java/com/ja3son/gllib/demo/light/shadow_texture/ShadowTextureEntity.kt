@@ -79,7 +79,7 @@ class ShadowTextureEntity(private val fName: String, private val useFace: Boolea
         uLightViewProjatrix = GLES30.glGetUniformLocation(program, "uLightViewProjatrix")
 
         if (!useFace) {
-            uViewProjatrix = GLES30.glGetUniformLocation(program, "uViewProjatrix")
+            uViewProjMatrix = GLES30.glGetUniformLocation(program, "uViewProjatrix")
             uIsShadow = GLES30.glGetUniformLocation(program, "uIsShadow")
         }
     }
@@ -91,7 +91,7 @@ class ShadowTextureEntity(private val fName: String, private val useFace: Boolea
         GLES30.glUniformMatrix4fv(uLightViewProjatrix, 1, false, lightViewProjMatrix, 0)
 
         if (!useFace) {
-            GLES30.glUniformMatrix4fv(uViewProjatrix, 1, false, MatrixState.getViewProjMatrix(), 0)
+            GLES30.glUniformMatrix4fv(uViewProjMatrix, 1, false, MatrixState.getViewProjMatrix(), 0)
             GLES30.glUniform1i(uIsShadow, isShadow)
         }
 

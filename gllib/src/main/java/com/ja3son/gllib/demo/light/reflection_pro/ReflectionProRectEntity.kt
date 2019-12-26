@@ -40,7 +40,7 @@ class ReflectionProRectEntity : BaseEntity() {
         GLES30.glUseProgram(program)
         GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
         GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
-        GLES30.glUniformMatrix4fv(uViewProjatrix, 1, false, viewProjMatrix, 0)
+        GLES30.glUniformMatrix4fv(uViewProjMatrix, 1, false, viewProjMatrix, 0)
 
         GLES30.glEnableVertexAttribArray(aPosition)
 

@@ -66,7 +66,7 @@ class InstanceEntity : BaseEntity() {
 
         GLES30.glUseProgram(program)
         GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
-        GLES30.glUniformMatrix4fv(uViewProjatrix, 1, false, MatrixState.getViewProjMatrix(), 0)
+        GLES30.glUniformMatrix4fv(uViewProjMatrix, 1, false, MatrixState.getViewProjMatrix(), 0)
 
         GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, vertexBufferId)
         GLES30.glVertexAttribPointer(aPosition, posLen, GLES30.GL_FLOAT, false, posLen * FLOAT_SIZE, 0)

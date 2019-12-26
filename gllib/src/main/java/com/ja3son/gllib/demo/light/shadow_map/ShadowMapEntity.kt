@@ -84,7 +84,7 @@ class ShadowMapEntity(private val fName: String, private val useFace: Boolean) :
         uMMatrix = GLES30.glGetUniformLocation(program, "uMMatrix")
         uLightLocation = GLES30.glGetUniformLocation(program, "uLightLocation")
         uCamera = GLES30.glGetUniformLocation(program, "uCamera")
-        uViewProjatrix = GLES30.glGetUniformLocation(program, "uViewProjatrix")
+        uViewProjMatrix = GLES30.glGetUniformLocation(program, "uViewProjatrix")
     }
 
     override fun drawSelf() {
@@ -110,7 +110,7 @@ class ShadowMapEntity(private val fName: String, private val useFace: Boolean) :
         GLES30.glUseProgram(program)
         GLES30.glUniformMatrix4fv(uMVPMatrix, 1, false, MatrixState.getFinalMatrix(), 0)
         GLES30.glUniformMatrix4fv(uMMatrix, 1, false, MatrixState.getModelMatrix(), 0)
-        GLES30.glUniformMatrix4fv(uViewProjatrix, 1, false, viewProjMatrix, 0)
+        GLES30.glUniformMatrix4fv(uViewProjMatrix, 1, false, viewProjMatrix, 0)
 
         GLES30.glUniform3fv(uLightLocation, 1, MatrixState.lightPositionFB)
         GLES30.glUniform3fv(uCamera, 1, MatrixState.cameraFB)
