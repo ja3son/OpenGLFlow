@@ -9,13 +9,11 @@ import android.opengl.ETC1Util
 import android.opengl.GLES30
 import android.opengl.GLUtils
 import android.os.Build
+import android.os.Environment
 import android.support.annotation.RequiresApi
 import com.ja3son.cgl.GL2JNILib
 import com.ja3son.utils.log.LogUtils
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
 import java.nio.ByteBuffer
 
 
@@ -98,6 +96,76 @@ object ShaderUtils {
             }
         }
         return program
+    }
+
+    class ProgramObject(
+            var binLength: Int,
+            var binaryFormat: Int,
+            var data: ByteArray) : Serializable
+
+    fun createLocalProgram(vertex: String, fragment: String, shaderName: String): Int {
+        var program = 0
+        val file = File(Environment.getExternalStorageDirectory().absolutePath + "/$shaderName.bin")
+        if (file.exists()) {
+            program = GLES30.glCreateProgram()
+            val stream = ObjectInputStream(FileInputStream(file))
+            val pro: ProgramObject = stream.readObject() as ProgramObject
+            stream.close()
+            val buffer = ByteBuffer.allocate(pro.binLength)
+            buffer.put(pro.data)
+            buffer.position(0)
+            GLES30.glProgramBinary(program, pro.binaryFormat, buffer, pro.binLength)
+            LogUtils.eLog("program is $program")
+            return program
+        }
+
+        val vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, vertex)
+        val fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragment)
+        if (vertexShader != 0 && fragmentShader != 0) {
+            program = GLES30.glCreateProgram()
+            if (program != 0) {
+                GLES30.glAttachShader(program, vertexShader)
+                checkGLError("glAttachShader")
+                GLES30.glAttachShader(program, fragmentShader)
+                checkGLError("glAttachShader")
+                GLES30.glProgramParameteri(program, GLES30.GL_PROGRAM_BINARY_RETRIEVABLE_HINT, GLES30.GL_TRUE)
+                GLES30.glLinkProgram(program)
+                val linkStatus = IntArray(1)
+                GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, linkStatus, 0)
+                if (linkStatus[0] != GLES30.GL_TRUE) {
+                    LogUtils.eLog("Could not link program: ")
+                    LogUtils.eLog(GLES30.glGetProgramInfoLog(program))
+                    GLES30.glDeleteProgram(program)
+                    program = 0
+                } else {
+                    val params = intArrayOf(1)
+                    val binLength = intArrayOf(1)
+                    val binaryFormat = intArrayOf(1)
+                    GLES30.glGetProgramiv(program, GLES30.GL_PROGRAM_BINARY_LENGTH, params, 0)
+                    val bufferSize = params[0]
+                    LogUtils.eLog("binary len is $bufferSize")
+                    val buffer = ByteBuffer.allocate(bufferSize)
+                    GLES30.glGetProgramBinary(program, bufferSize, binLength, 0, binaryFormat, 0, buffer)
+                    LogUtils.eLog("bin length is " + binLength[0])
+                    LogUtils.eLog("binary format is " + binaryFormat[0])
+                    exportProgramBinary(ProgramObject(binLength[0], binaryFormat[0], buffer.array()), shaderName)
+                }
+            }
+        }
+        return program
+    }
+
+    private fun exportProgramBinary(po: ProgramObject?, shaderName: String) {
+        val path: String = Environment.getExternalStorageDirectory().absolutePath + "/$shaderName.bin"
+        try {
+            val fout = FileOutputStream(path)
+            val oout = ObjectOutputStream(fout)
+            oout.writeObject(po)
+            oout.close()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+        LogUtils.eLog("out ok$path")
     }
 
     fun loadFromAssetsFile(fName: String) =
