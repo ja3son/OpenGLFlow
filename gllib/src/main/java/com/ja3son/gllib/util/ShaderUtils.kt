@@ -6,7 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.opengl.ETC1Util
-import android.opengl.GLES30
+import android.opengl.GLES31
 import android.opengl.GLUtils
 import android.os.Build
 import android.os.Environment
@@ -27,17 +27,17 @@ object ShaderUtils {
 
     fun loadShader(shaderType: Int, source: String): Int {
 
-        var shader: Int = GLES30.glCreateShader(shaderType)
+        var shader: Int = GLES31.glCreateShader(shaderType)
 
         if (shader != 0) {
-            GLES30.glShaderSource(shader, source)
-            GLES30.glCompileShader(shader)
+            GLES31.glShaderSource(shader, source)
+            GLES31.glCompileShader(shader)
             val compiled = IntArray(1)
-            GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, compiled, 0)
+            GLES31.glGetShaderiv(shader, GLES31.GL_COMPILE_STATUS, compiled, 0)
             if (compiled[0] == 0) {
                 LogUtils.eLog("Could not compile shader $shaderType : ")
-                LogUtils.eLog(GLES30.glGetShaderInfoLog(shader))
-                GLES30.glDeleteShader(shader)
+                LogUtils.eLog(GLES31.glGetShaderInfoLog(shader))
+                GLES31.glDeleteShader(shader)
                 shader = 0
             }
         }
@@ -47,22 +47,22 @@ object ShaderUtils {
 
     fun createProgram(vertex: String, fragment: String): Int {
         var program = 0
-        val vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, vertex)
-        val fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragment)
+        val vertexShader = loadShader(GLES31.GL_VERTEX_SHADER, vertex)
+        val fragmentShader = loadShader(GLES31.GL_FRAGMENT_SHADER, fragment)
         if (vertexShader != 0 && fragmentShader != 0) {
-            program = GLES30.glCreateProgram()
+            program = GLES31.glCreateProgram()
             if (program != 0) {
-                GLES30.glAttachShader(program, vertexShader)
+                GLES31.glAttachShader(program, vertexShader)
                 checkGLError("glAttachShader")
-                GLES30.glAttachShader(program, fragmentShader)
+                GLES31.glAttachShader(program, fragmentShader)
                 checkGLError("glAttachShader")
-                GLES30.glLinkProgram(program)
+                GLES31.glLinkProgram(program)
                 val linkStatus = IntArray(1)
-                GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, linkStatus, 0)
-                if (linkStatus[0] != GLES30.GL_TRUE) {
+                GLES31.glGetProgramiv(program, GLES31.GL_LINK_STATUS, linkStatus, 0)
+                if (linkStatus[0] != GLES31.GL_TRUE) {
                     LogUtils.eLog("Could not link program: ")
-                    LogUtils.eLog(GLES30.glGetProgramInfoLog(program))
-                    GLES30.glDeleteProgram(program)
+                    LogUtils.eLog(GLES31.glGetProgramInfoLog(program))
+                    GLES31.glDeleteProgram(program)
                     program = 0
                 }
             }
@@ -72,83 +72,26 @@ object ShaderUtils {
 
     fun createProgramFeedback(vertex: String, fragment: String, attribute: String): Int {
         var program = 0
-        val vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, vertex)
-        val fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragment)
+        val vertexShader = loadShader(GLES31.GL_VERTEX_SHADER, vertex)
+        val fragmentShader = loadShader(GLES31.GL_FRAGMENT_SHADER, fragment)
         if (vertexShader != 0 && fragmentShader != 0) {
-            program = GLES30.glCreateProgram()
+            program = GLES31.glCreateProgram()
             if (program != 0) {
-                GLES30.glAttachShader(program, vertexShader)
+                GLES31.glAttachShader(program, vertexShader)
                 checkGLError("glAttachShader")
-                GLES30.glAttachShader(program, fragmentShader)
+                GLES31.glAttachShader(program, fragmentShader)
                 checkGLError("glAttachShader")
 
-                GLES30.glTransformFeedbackVaryings(program, arrayOf(attribute), GLES30.GL_INTERLEAVED_ATTRIBS)
+                GLES31.glTransformFeedbackVaryings(program, arrayOf(attribute), GLES31.GL_INTERLEAVED_ATTRIBS)
 
-                GLES30.glLinkProgram(program)
+                GLES31.glLinkProgram(program)
                 val linkStatus = IntArray(1)
-                GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, linkStatus, 0)
-                if (linkStatus[0] != GLES30.GL_TRUE) {
+                GLES31.glGetProgramiv(program, GLES31.GL_LINK_STATUS, linkStatus, 0)
+                if (linkStatus[0] != GLES31.GL_TRUE) {
                     LogUtils.eLog("Could not link program: ")
-                    LogUtils.eLog(GLES30.glGetProgramInfoLog(program))
-                    GLES30.glDeleteProgram(program)
+                    LogUtils.eLog(GLES31.glGetProgramInfoLog(program))
+                    GLES31.glDeleteProgram(program)
                     program = 0
-                }
-            }
-        }
-        return program
-    }
-
-    class ProgramObject(
-            var binLength: Int,
-            var binaryFormat: Int,
-            var data: ByteArray) : Serializable
-
-    fun createLocalProgram(vertex: String, fragment: String, shaderName: String): Int {
-        var program = 0
-        val file = File(Environment.getExternalStorageDirectory().absolutePath + "/$shaderName.bin")
-        if (file.exists()) {
-            program = GLES30.glCreateProgram()
-            val stream = ObjectInputStream(FileInputStream(file))
-            val pro: ProgramObject = stream.readObject() as ProgramObject
-            stream.close()
-            val buffer = ByteBuffer.allocate(pro.binLength)
-            buffer.put(pro.data)
-            buffer.position(0)
-            GLES30.glProgramBinary(program, pro.binaryFormat, buffer, pro.binLength)
-            LogUtils.eLog("program is $program")
-            return program
-        }
-
-        val vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, vertex)
-        val fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragment)
-        if (vertexShader != 0 && fragmentShader != 0) {
-            program = GLES30.glCreateProgram()
-            if (program != 0) {
-                GLES30.glAttachShader(program, vertexShader)
-                checkGLError("glAttachShader")
-                GLES30.glAttachShader(program, fragmentShader)
-                checkGLError("glAttachShader")
-                GLES30.glProgramParameteri(program, GLES30.GL_PROGRAM_BINARY_RETRIEVABLE_HINT, GLES30.GL_TRUE)
-                GLES30.glLinkProgram(program)
-                val linkStatus = IntArray(1)
-                GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, linkStatus, 0)
-                if (linkStatus[0] != GLES30.GL_TRUE) {
-                    LogUtils.eLog("Could not link program: ")
-                    LogUtils.eLog(GLES30.glGetProgramInfoLog(program))
-                    GLES30.glDeleteProgram(program)
-                    program = 0
-                } else {
-                    val params = intArrayOf(1)
-                    val binLength = intArrayOf(1)
-                    val binaryFormat = intArrayOf(1)
-                    GLES30.glGetProgramiv(program, GLES30.GL_PROGRAM_BINARY_LENGTH, params, 0)
-                    val bufferSize = params[0]
-                    LogUtils.eLog("binary len is $bufferSize")
-                    val buffer = ByteBuffer.allocate(bufferSize)
-                    GLES30.glGetProgramBinary(program, bufferSize, binLength, 0, binaryFormat, 0, buffer)
-                    LogUtils.eLog("bin length is " + binLength[0])
-                    LogUtils.eLog("binary format is " + binaryFormat[0])
-                    exportProgramBinary(ProgramObject(binLength[0], binaryFormat[0], buffer.array()), shaderName)
                 }
             }
         }
@@ -168,6 +111,112 @@ object ShaderUtils {
         LogUtils.eLog("out ok$path")
     }
 
+    class ProgramObject(
+            var binLength: Int,
+            var binaryFormat: Int,
+            var data: ByteArray) : Serializable
+
+    fun createLocalProgram(vertex: String, fragment: String, shaderName: String): Int {
+        var program = 0
+        val file = File(Environment.getExternalStorageDirectory().absolutePath + "/$shaderName.bin")
+        if (file.exists()) {
+            program = GLES31.glCreateProgram()
+            val stream = ObjectInputStream(FileInputStream(file))
+            val pro: ProgramObject = stream.readObject() as ProgramObject
+            stream.close()
+            val buffer = ByteBuffer.allocate(pro.binLength)
+            buffer.put(pro.data)
+            buffer.position(0)
+            GLES31.glProgramBinary(program, pro.binaryFormat, buffer, pro.binLength)
+            LogUtils.eLog("program is $program")
+            return program
+        }
+
+        val vertexShader = loadShader(GLES31.GL_VERTEX_SHADER, vertex)
+        val fragmentShader = loadShader(GLES31.GL_FRAGMENT_SHADER, fragment)
+        if (vertexShader != 0 && fragmentShader != 0) {
+            program = GLES31.glCreateProgram()
+            if (program != 0) {
+                GLES31.glAttachShader(program, vertexShader)
+                checkGLError("glAttachShader")
+                GLES31.glAttachShader(program, fragmentShader)
+                checkGLError("glAttachShader")
+                GLES31.glProgramParameteri(program, GLES31.GL_PROGRAM_BINARY_RETRIEVABLE_HINT, GLES31.GL_TRUE)
+                GLES31.glLinkProgram(program)
+                val linkStatus = IntArray(1)
+                GLES31.glGetProgramiv(program, GLES31.GL_LINK_STATUS, linkStatus, 0)
+                if (linkStatus[0] != GLES31.GL_TRUE) {
+                    LogUtils.eLog("Could not link program: ")
+                    LogUtils.eLog(GLES31.glGetProgramInfoLog(program))
+                    GLES31.glDeleteProgram(program)
+                    program = 0
+                } else {
+                    val params = intArrayOf(1)
+                    val binLength = intArrayOf(1)
+                    val binaryFormat = intArrayOf(1)
+                    GLES31.glGetProgramiv(program, GLES31.GL_PROGRAM_BINARY_LENGTH, params, 0)
+                    val bufferSize = params[0]
+                    LogUtils.eLog("binary len is $bufferSize")
+                    val buffer = ByteBuffer.allocate(bufferSize)
+                    GLES31.glGetProgramBinary(program, bufferSize, binLength, 0, binaryFormat, 0, buffer)
+                    LogUtils.eLog("bin length is " + binLength[0])
+                    LogUtils.eLog("binary format is " + binaryFormat[0])
+                    exportProgramBinary(ProgramObject(binLength[0], binaryFormat[0], buffer.array()), shaderName)
+                }
+            }
+        }
+        return program
+    }
+
+    fun createComputeProgram(shaderPath: String, shaderName: String): Int {
+        var program = 0
+//        val file = File(Environment.getExternalStorageDirectory().absolutePath + "/$shaderName.bin")
+//        if (file.exists()) {
+//            program = GLES31.glCreateProgram()
+//            val stream = ObjectInputStream(FileInputStream(file))
+//            val pro: ProgramObject = stream.readObject() as ProgramObject
+//            stream.close()
+//            val buffer = ByteBuffer.allocate(pro.binLength)
+//            buffer.put(pro.data)
+//            buffer.position(0)
+//            GLES31.glProgramBinary(program, pro.binaryFormat, buffer, pro.binLength)
+//            LogUtils.eLog("program is $program")
+//            return program
+//        }
+
+        val shader = loadShader(GLES31.GL_COMPUTE_SHADER, shaderPath)
+        if (shader != 0) {
+            program = GLES31.glCreateProgram()
+            if (program != 0) {
+                GLES31.glAttachShader(program, shader)
+                checkGLError("glAttachShader")
+//                GLES31.glProgramParameteri(program, GLES31.GL_PROGRAM_BINARY_RETRIEVABLE_HINT, GLES31.GL_TRUE)
+                GLES31.glLinkProgram(program)
+                val linkStatus = IntArray(1)
+                GLES31.glGetProgramiv(program, GLES31.GL_LINK_STATUS, linkStatus, 0)
+                if (linkStatus[0] != GLES31.GL_TRUE) {
+                    LogUtils.eLog("Could not link program: ")
+                    LogUtils.eLog(GLES31.glGetProgramInfoLog(program))
+                    GLES31.glDeleteProgram(program)
+                    program = 0
+                } else {
+//                    val params = intArrayOf(1)
+//                    val binLength = intArrayOf(1)
+//                    val binaryFormat = intArrayOf(1)
+//                    GLES31.glGetProgramiv(program, GLES31.GL_PROGRAM_BINARY_LENGTH, params, 0)
+//                    val bufferSize = params[0]
+//                    LogUtils.eLog("binary len is $bufferSize")
+//                    val buffer = ByteBuffer.allocate(bufferSize)
+//                    GLES31.glGetProgramBinary(program, bufferSize, binLength, 0, binaryFormat, 0, buffer)
+//                    LogUtils.eLog("bin length is " + binLength[0])
+//                    LogUtils.eLog("binary format is " + binaryFormat[0])
+//                    exportProgramBinary(ProgramObject(binLength[0], binaryFormat[0], buffer.array()), shaderName)
+                }
+            }
+        }
+        return program
+    }
+
     fun loadFromAssetsFile(fName: String) =
             res.assets.open(fName).bufferedReader().use {
                 it.readText()
@@ -175,8 +224,8 @@ object ShaderUtils {
 
 
     fun checkGLError(op: String) {
-        val error = GLES30.glGetError()
-        if (error != GLES30.GL_NO_ERROR) {
+        val error = GLES31.glGetError()
+        if (error != GLES31.GL_NO_ERROR) {
             val log = "$op : glError $error"
             LogUtils.eLog(log)
             throw RuntimeException(log)
@@ -185,114 +234,114 @@ object ShaderUtils {
 
     fun genTexture(target: Int, width: Int, height: Int): Int {
         val textures = IntArray(1)
-        GLES30.glGenTextures(1, textures, 0)
+        GLES31.glGenTextures(1, textures, 0)
         val textureId = textures[0]
-        GLES30.glBindTexture(target, textureId)
-        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
-        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
-        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE)
-        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE)
-        GLES30.glTexImage2D(target, 0, GLES30.GL_RGBA, width, height, 0, GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, null)
-        GLES30.glBindTexture(target, 0)
+        GLES31.glBindTexture(target, textureId)
+        GLES31.glTexParameteri(target, GLES31.GL_TEXTURE_MIN_FILTER, GLES31.GL_LINEAR)
+        GLES31.glTexParameteri(target, GLES31.GL_TEXTURE_MAG_FILTER, GLES31.GL_LINEAR)
+        GLES31.glTexParameteri(target, GLES31.GL_TEXTURE_WRAP_S, GLES31.GL_CLAMP_TO_EDGE)
+        GLES31.glTexParameteri(target, GLES31.GL_TEXTURE_WRAP_T, GLES31.GL_CLAMP_TO_EDGE)
+        GLES31.glTexImage2D(target, 0, GLES31.GL_RGBA, width, height, 0, GLES31.GL_RGBA, GLES31.GL_UNSIGNED_BYTE, null)
+        GLES31.glBindTexture(target, 0)
         return textureId
     }
 
     fun genDepthTexture(target: Int, width: Int, height: Int): Int {
         val textures = IntArray(1)
-        GLES30.glGenTextures(1, textures, 0)
+        GLES31.glGenTextures(1, textures, 0)
         val textureId = textures[0]
-        GLES30.glBindTexture(target, textureId)
-        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
-        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
-        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE)
-        GLES30.glTexParameteri(target, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE)
-        GLES30.glTexImage2D(target, 0, GLES30.GL_R16F, width, height, 0, GLES30.GL_RED, GLES30.GL_FLOAT, null)
-        GLES30.glBindTexture(target, 0)
+        GLES31.glBindTexture(target, textureId)
+        GLES31.glTexParameteri(target, GLES31.GL_TEXTURE_MIN_FILTER, GLES31.GL_LINEAR)
+        GLES31.glTexParameteri(target, GLES31.GL_TEXTURE_MAG_FILTER, GLES31.GL_LINEAR)
+        GLES31.glTexParameteri(target, GLES31.GL_TEXTURE_WRAP_S, GLES31.GL_CLAMP_TO_EDGE)
+        GLES31.glTexParameteri(target, GLES31.GL_TEXTURE_WRAP_T, GLES31.GL_CLAMP_TO_EDGE)
+        GLES31.glTexImage2D(target, 0, GLES31.GL_R16F, width, height, 0, GLES31.GL_RED, GLES31.GL_FLOAT, null)
+        GLES31.glBindTexture(target, 0)
         return textureId
     }
 
     fun initTexture(drawable: Int): Int {
         val textures = IntArray(1)
-        GLES30.glGenTextures(1, textures, 0)
+        GLES31.glGenTextures(1, textures, 0)
         val textureId = textures[0]
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D, textureId)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_MIN_FILTER, GLES31.GL_NEAREST)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_MAG_FILTER, GLES31.GL_LINEAR)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_S, GLES31.GL_REPEAT)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_T, GLES31.GL_REPEAT)
 
         val bitmap = BitmapFactory.decodeResource(res, drawable)
 
-        GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0)
+        GLUtils.texImage2D(GLES31.GL_TEXTURE_2D, 0, bitmap, 0)
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D, 0)
         bitmap.recycle()
         return textureId
     }
 
     fun initCubmapTexture(drawables: IntArray): Int {
         val textures = IntArray(1)
-        GLES30.glGenTextures(1, textures, 0)
+        GLES31.glGenTextures(1, textures, 0)
         val textureId = textures[0]
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_CUBE_MAP, textureId)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_CUBE_MAP, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_CUBE_MAP, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_CUBE_MAP, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_CUBE_MAP, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_CUBE_MAP, textureId)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_CUBE_MAP, GLES31.GL_TEXTURE_MIN_FILTER, GLES31.GL_LINEAR)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_CUBE_MAP, GLES31.GL_TEXTURE_MAG_FILTER, GLES31.GL_LINEAR)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_CUBE_MAP, GLES31.GL_TEXTURE_WRAP_S, GLES31.GL_REPEAT)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_CUBE_MAP, GLES31.GL_TEXTURE_WRAP_T, GLES31.GL_REPEAT)
 
         drawables.forEachIndexed { index, drawable ->
             run {
                 val bitmap = BitmapFactory.decodeResource(res, drawable)
-                GLUtils.texImage2D(GLES30.GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, 0, bitmap, 0)
+                GLUtils.texImage2D(GLES31.GL_TEXTURE_CUBE_MAP_POSITIVE_X + index, 0, bitmap, 0)
                 bitmap.recycle()
             }
         }
 
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0)
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D, 0)
         return textureId
     }
 
     fun initMipMapTexture(drawable: Int): Int {
         val textures = IntArray(1)
-        GLES30.glGenTextures(1, textures, 0)
+        GLES31.glGenTextures(1, textures, 0)
         val textureId = textures[0]
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR_MIPMAP_LINEAR)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D, textureId)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_MIN_FILTER, GLES31.GL_LINEAR_MIPMAP_LINEAR)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_MAG_FILTER, GLES31.GL_LINEAR)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_S, GLES31.GL_REPEAT)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_T, GLES31.GL_REPEAT)
 
         val bitmap = BitmapFactory.decodeResource(res, drawable)
 
-        GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bitmap, 0)
-        GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D)
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0)
+        GLUtils.texImage2D(GLES31.GL_TEXTURE_2D, 0, bitmap, 0)
+        GLES31.glGenerateMipmap(GLES31.GL_TEXTURE_2D)
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D, 0)
         bitmap.recycle()
         return textureId
     }
 
     fun initTextureEtc1(raw: Int): Int {
         val textures = IntArray(1)
-        GLES30.glGenTextures(1, textures, 0)
+        GLES31.glGenTextures(1, textures, 0)
         val textureId = textures[0]
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D, textureId)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_MIN_FILTER, GLES31.GL_NEAREST)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_MAG_FILTER, GLES31.GL_LINEAR)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_S, GLES31.GL_REPEAT)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_2D, GLES31.GL_TEXTURE_WRAP_T, GLES31.GL_REPEAT)
 
         val inputStream: InputStream = res.openRawResource(raw)
 
         ETC1Util.loadTexture(
-                GLES30.GL_TEXTURE_2D,
+                GLES31.GL_TEXTURE_2D,
                 0,
                 0,
-                GLES30.GL_RGB,
-                GLES30.GL_UNSIGNED_BYTE,
+                GLES31.GL_RGB,
+                GLES31.GL_UNSIGNED_BYTE,
                 inputStream
         )
 
         inputStream.close()
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0)
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D, 0)
         return textureId
     }
 
@@ -301,38 +350,38 @@ object ShaderUtils {
             : Int {
 
         val textures = IntArray(1)
-        GLES30.glGenTextures(
+        GLES31.glGenTextures(
                 1,
                 textures,
                 0
         )
         val textureId = textures[0]
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_3D, textureId)
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_3D, textureId)
 
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_3D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_3D, GLES31.GL_TEXTURE_MIN_FILTER, GLES31.GL_NEAREST)
 
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_3D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_NEAREST)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_3D, GLES31.GL_TEXTURE_MAG_FILTER, GLES31.GL_NEAREST)
 
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_3D, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_REPEAT)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_3D, GLES31.GL_TEXTURE_WRAP_S, GLES31.GL_REPEAT)
 
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_3D, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_REPEAT)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_3D, GLES31.GL_TEXTURE_WRAP_T, GLES31.GL_REPEAT)
 
-        GLES30.glTexParameteri(GLES30.GL_TEXTURE_3D, GLES30.GL_TEXTURE_WRAP_R, GLES30.GL_REPEAT)
+        GLES31.glTexParameteri(GLES31.GL_TEXTURE_3D, GLES31.GL_TEXTURE_WRAP_R, GLES31.GL_REPEAT)
 
         val texels = ByteBuffer.allocateDirect(texData.size)
         texels.put(texData)
         texels.position(0)
 
-        GLES30.glTexImage3D(
-                GLES30.GL_TEXTURE_3D,
+        GLES31.glTexImage3D(
+                GLES31.GL_TEXTURE_3D,
                 0,
-                GLES30.GL_RGBA8,
+                GLES31.GL_RGBA8,
                 width,
                 height,
                 depth,
                 0,
-                GLES30.GL_RGBA,
-                GLES30.GL_UNSIGNED_BYTE,
+                GLES31.GL_RGBA,
+                GLES31.GL_UNSIGNED_BYTE,
                 texels
         )
 
@@ -366,26 +415,26 @@ object ShaderUtils {
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     fun initTextureArray(picId: IntArray, width: Int, height: Int): Int {
         val textures = IntArray(1)
-        GLES30.glGenTextures(1, textures, 0)
+        GLES31.glGenTextures(1, textures, 0)
         val textureId = textures[0]
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D_ARRAY, textureId)
-        GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE.toFloat())
-        GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE.toFloat())
-        GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_WRAP_R, GLES30.GL_CLAMP_TO_EDGE.toFloat())
-        GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST.toFloat())
-        GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D_ARRAY, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR.toFloat())
+        GLES31.glBindTexture(GLES31.GL_TEXTURE_2D_ARRAY, textureId)
+        GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D_ARRAY, GLES31.GL_TEXTURE_WRAP_S, GLES31.GL_CLAMP_TO_EDGE.toFloat())
+        GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D_ARRAY, GLES31.GL_TEXTURE_WRAP_T, GLES31.GL_CLAMP_TO_EDGE.toFloat())
+        GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D_ARRAY, GLES31.GL_TEXTURE_WRAP_R, GLES31.GL_CLAMP_TO_EDGE.toFloat())
+        GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D_ARRAY, GLES31.GL_TEXTURE_MIN_FILTER, GLES31.GL_NEAREST.toFloat())
+        GLES31.glTexParameterf(GLES31.GL_TEXTURE_2D_ARRAY, GLES31.GL_TEXTURE_MAG_FILTER, GLES31.GL_LINEAR.toFloat())
         val texBuff = convertPicsToBuffer(picId, width, height)
         texBuff.position(0)
-        GLES30.glTexImage3D(
-                GLES30.GL_TEXTURE_2D_ARRAY,
+        GLES31.glTexImage3D(
+                GLES31.GL_TEXTURE_2D_ARRAY,
                 0,
-                GLES30.GL_RGBA8,
+                GLES31.GL_RGBA8,
                 width,
                 height,
                 picId.size,
                 0,
-                GLES30.GL_RGBA,
-                GLES30.GL_UNSIGNED_BYTE,
+                GLES31.GL_RGBA,
+                GLES31.GL_UNSIGNED_BYTE,
                 texBuff
         )
         return textureId
